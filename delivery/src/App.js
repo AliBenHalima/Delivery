@@ -15,30 +15,39 @@ import {useObservable} from "react-use-observable-state";
 import * as rxjs from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { of } from 'rxjs';
-
-import { Provider } from 'react-redux'
+import { Provider, connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 // import createStore from './createReduxStore'
 import {store} from './Redux/store'
 import TestToDelete from './Components/TestToDelete';
+import { PostLogin } from './Redux/Authentification/actions';
+import Admin from './Components/Admin';
+
+// import { connect } from 'react-redux';
+
 
 export const UserContext = React.createContext();
-function App() {
+
+function App({isAuthenticated}) {
+
   // RXJS shit 
   let tokenExists="nodata";
+  console.log("test",store.getState().postRed.authenticated)
 const names$ = new Subject()
 // const [names, setNames] = useState();
 
+console.log("Store authentificated value is ",store.getState().postRed.authenticated);
   useEffect(() => {
 	const subscription = names$.subscribe((v)=>{console.log("subscription accomplished",v); tokenExists=v});
   
   // names$.next(1);
     // return () => subscription.unsubscribe();
   });
-
-
-
-
   const [state, setstate] = useState({login:"true",user:{}});
+
+
+
+
 const data=(PassedData)=>{
  return PassedData;
 }
@@ -56,7 +65,7 @@ const token = localStorage.getItem('token');
 
 
           <Route path="/Login" component={()=>(
-            tokenExists=="true" ? <Redirect to='/Home' />:  <Login names={names$} /> 
+            isAuthenticated ? <Redirect to='/Home' />:  <Login store={store.getState().postRed.authenticated} /> 
           )}>
           </Route>
             {/* <UserContext.Provider value={"Hello Ali"} >
@@ -74,12 +83,23 @@ const token = localStorage.getItem('token');
           }} />
 
           <Route path="/SignUp" component={()=>(
-            token ? <Redirect to='/Home' /> : <SignUp /> )}>   
+            isAuthenticated ? <Redirect to='/Home' /> : <SignUp /> )}>   
           </Route>
 
-          <Route path="/test" component={About} />
-          <Route path="/Reservation" component={Reservation} />
+          <Route path="/test" >
+            <About />
+            </Route>
+
+          <Route path="/Reservation" component={()=>(
+            isAuthenticated ? <Reservation />:  <Login /> 
+          )}>
+              </Route>
           <Route path="/Menu" component={Menu} />
+          {/* <Route path="/Admin" component={Admin} /> */}
+          <Route path="/Admin" component={()=>(
+            isAuthenticated ? <Admin />:  <Login /> 
+          )}>
+          </Route>
           <Route path="/Contact" component={Contact} />
 
         
@@ -95,4 +115,13 @@ const token = localStorage.getItem('token');
   );
 }
 
-export default App;
+const mapStateToProps=(state)=>{
+  return{ isAuthenticated: state.postRed.authenticated
+  }
+}
+
+const mapDispatchToProps =(dispatch)=>{
+  return{ dispatch_Users: ()=> dispatch(PostLogin())
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(App);

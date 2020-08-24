@@ -5,8 +5,15 @@ import { UserContext } from '../App';
 import axios from "axios";
 import Home from './Home';
 import Header from './Header';
+import { Postlogup } from '../Redux/Authentification/actions';
+import { map, startWith } from "rxjs/operators";
+import { of } from "rxjs";
+import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
+import { PostLogin } from "../Redux/Authentification/actions";
+import { store } from "../Redux/store";
 
-function SignUp() {
+
+function SignUp({logupState, dispatch_Users}) {
 
     const [state, setstate] = useState({Username:"",Email:"",Password:"",Address:"",Phonenumber:0});
     const [store, setstore] = useState({store:"",login:false,user:{}});
@@ -21,25 +28,39 @@ function SignUp() {
   }
 
     const Sumbithandle=(e)=>{
-        console.log("state is",state);
-        axios.post("http://localhost:3000/Sign/SignUp",Data).then((res)=>{
-        console.log("Sign Up Data is here",res);
-    
-        if(res.data.success){
-          alert(res.data.success)  ;
-          history.push('/Home');
-
-        }  else{
-          alert(res.data.error);
-        } 
-   
-    
-      
+      dispatch_Users(Data);
+      // history.push('/Home');      
+        e.preventDefault(); 
+    } 
+    useEffect(() => {
+   console.log("logupState",logupState);
+   logupState.isLoggedUp ? history.push('/Home') : history.push('/SignUp');
     })
-      .catch((err)=>{console.log(err)});
-        e.preventDefault();  
-      
-      }
+//       useEffect(() => {
+//         axios.get("http://localhost:3000/User/All").then((response) => {
+//           const info = response.data.data
+//           console.log( typeof(info) );
+         
+//           info.forEach(element => {
+//             if(element.Email==Data.Email && element.Password==Data.Password){
+//              history.push('/Home');
+//           }
+//             else{
+//               history.push('/SignUp');
+//             }
+            
+//           });
+// console.log("data",info)
+//           // if (info.success){
+//           //   history.push('/Home');
+//           // }
+//           //   else{
+//           //     history.push('/SignUp');
+//           //   }
+//           })
+//       }, [state]) 
+
+
 
       const ChangeHandleUsername =(e)=>{
         setstate({...state,Username:e.target.value});
@@ -199,5 +220,13 @@ function SignUp() {
 </div> 
     )
 }
+const mapStateToProps=(state)=>{
+  return{ logupState: state.postLogup
+  }
+}
 
-export default SignUp
+const mapDispatchToProps =(dispatch)=>{
+  return{ dispatch_Users: (Data)=> dispatch(Postlogup(Data))
+  }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(SignUp);

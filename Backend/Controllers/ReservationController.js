@@ -31,7 +31,8 @@ router.post('/AddReservation',(req,res)=>{
       Address: req.body.Address,
       Description: req.body.Description,
       Meal:req.body.Meal,
-      ResevedFor: decodedToken.userId 
+      ResevedFor: decodedToken.userId,
+      ForProduct : req.body.Product
     });
 
     reservation.save((err) => {

@@ -9,11 +9,31 @@ import {useObservable} from "react-use-observable-state";
 import * as rxjs from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { postfailed, refreshStore } from '../Redux/Authentification/actions';
+import { connect } from 'react-redux';
 
-function Header(props) {
+function Header({dispatch_SignOut,dispatch_Refresh,isAuthenticated}) {
     
 const [state, setstate] = useState({isAuthenticated:false});
 const [element, setelement] = useState({elements:[]});
+
+useEffect(() => {
+	var loadScript = function (src) {
+		var tag = document.createElement('script');
+		tag.async = false;
+		tag.src = src;
+		var body = document.getElementsByTagName('body')[0];
+		body.appendChild(tag);
+	  }
+  
+	  loadScript('assets/js/custom.js');
+	  loadScript('assets/js/contactMap.js');
+	
+	let token = localStorage.getItem("token")
+	if(token)
+	dispatch_Refresh();
+}, [])
+
 
  const checkAuth = ()=>{
     let token =localStorage.getItem("token");
@@ -48,7 +68,8 @@ return state.isAuthenticated;
 				<div>
 					 <Link to="/Logout">	<li className="nav-item"><a onClick={()=>Signout(()=>{
 						 localStorage.removeItem("token");
-						 props.names.next("false");
+						 dispatch_SignOut();
+						//  props.names.next("false");
 						 history.push("/Home")
 
 					 }
@@ -80,8 +101,7 @@ return state.isAuthenticated;
     return (
         <div>
             
-			<h1>RxJS with React</h1>
-     {/* <h1> {names  } </h1> */}
+
 
 
             <header className="top-navbar">
@@ -97,7 +117,7 @@ return state.isAuthenticated;
 					<ul className="navbar-nav ml-auto">
 						<Link to="/Home" ><li className="nav-item active"><a className="nav-link">Home</a></li></Link>
 					<Link to="/Menu">	<li className="nav-item"><a className="nav-link" >Menu</a></li> </Link>
-						<Link to="/About">	<li className="nav-item"><a className="nav-link" >Admin</a></li></Link>
+						<Link to="/Admin">	<li className="nav-item"><a className="nav-link" >Admin</a></li></Link>
 	<PrivateRoute path="/About"  component={About} />
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Pages</a>
@@ -128,4 +148,14 @@ return state.isAuthenticated;
     )
 }
 
-export default Header
+const mapStateToProps=(state)=>{
+    return{ isAuthenticated: state.postRed.authenticated
+    }
+  }
+  
+  const mapDispatchToProps =(dispatch)=>{
+	return{ dispatch_SignOut: ()=> dispatch(postfailed("You Logged off successfully")),
+	dispatch_Refresh:()=> dispatch(refreshStore("store refreshed")),
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(Header);

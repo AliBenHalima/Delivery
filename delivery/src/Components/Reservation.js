@@ -4,42 +4,137 @@ import { UserContext } from '../App';
 import axios from "axios";
 import Opt from './Opt';
 import Header from './Header';
+import { FetchProducts, PostProducts } from '../Redux/Products/actions';
+import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
+import PlacesAutocomplete, {
+	geocodeByAddress,
+	getLatLng,
+  } from 'react-places-autocomplete';
 
-function Reservation() {
-	const [state, setstate] = useState({Email:"",PhoneNumber:null,Address:"",Description:"",ResevedFor:""});
+function Reservation({productsList,dispatch_Products,isPosted,dispatch_PostProducts}) {
+/////////////////////////////////////////////////////////////////
+
+const API_KEY = '152ba6ac3ac5cc41523ada381a15d0ab';
+const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
+const fetchFunction=(url) =>{
+  fetch(url)
+    .then((response) => {
+      let data;
+      if (response.ok) {
+        console.log("response",response);
+        data = response.json();
+        console.log(data);
+        return data;
+      }
+    })
+    .then((data) => {
+      console.log(data);
+
+      const  coordinates = {
+        lattitude : data.coord.lat,
+        longitude : data.coord.lon,
+        place: data.name,
+	  };
+	  console.log(" coordinates is ", coordinates);
+     
+    });
+}
+const showPosition = position => {
+	let lat = position.coords.latitude;
+	let lon = position.coords.longitude;
+	const url = `${API_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+	fetchFunction(url);
+		
+		
+};
+
+const getCurrenWeatherPosition=()=> {
+	if ('geolocation' in navigator) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+	} else {
+		console.log('no Geolocation detected');
+	}
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////
+
+
+
+
+
+	
+	const [state, setstate] = useState({Email:"",PhoneNumber:null,Address:"",ResevedFor:"",Product:""});
 	// const [products, setproducts] = useState({name:"",price:"",category:"",CookingTime:"",rating:"",Promotion:""});
-	const [products, setproducts] = useState({product:[]});
+	// const [products, setproducts] = useState({product:[]});
+const [address, setaddress] = useState("");
 
-	const token =localStorage.getItem('token');
+
+const [coordinates, setCoordinates] = React.useState({
+    lat: null,
+    lng: null
+  });
+
+  const handleSelect = async value => {
+    const results = await geocodeByAddress(value);
+    const latLng = await getLatLng(results[0]);
+    setaddress(value);
+	setCoordinates(latLng);
+	console.log(latLng);
+  };
+
 	let history = useHistory();
- let Allproducts;
+	const token =localStorage.getItem('token');
+
+//  let Allproducts;
 	let Data = {
     Email: state.Email,
     PhoneNumber: state.PhoneNumber,
     Address: state.Address,
-    Description: state.Description,
+	Description: state.Description,
+	Product: state.Product
   };
 
 	const Sumbithandle = (e) => {
-    console.log("state is", state);
-    axios
-      .post("http://localhost:3000/Reservation/AddReservation", Data, {
-        headers: {
-          "authtoken": token, //the token is a variable which holds the token
-        },
-      })
-      .then((res) => {
-        console.log("Reservation Data is here", res);
-
-        if(res.data.success){
-			alert(res.data.message);
-			//  history.push('/Home');
-		}  
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // e.preventDefault();
+		dispatch_PostProducts(Data,token);
+		history.push('/Home') 
+	
+    e.preventDefault();
   };
 	  
   const ChangeHandleEmail =(e)=>{
@@ -54,23 +149,43 @@ function Reservation() {
   const ChangeHandleDescription =(e)=>{
     setstate({...state,Description:e.target.value});
   }
+  
+  const ChangeHandleProduct =(e)=>{
+	e.persist()
+	  console.log("e value is ",e.target.value);
+    setstate({...state,Product:e.target.value});
+  }
+
 
 //Fetching all Products 
 useEffect(() => {
-	axios
-      .get("http://localhost:3000/Product/All")
-      .then((res) => {
-        console.log("Log in Data is here", res);
-		Allproducts=res.data;
-		setproducts({product:res.data})
+	console.log("isposted",isPosted)
 
-        console.log("Log in Data is Allproducts", Allproducts);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+	if(productsList.length < 1)
+	dispatch_Products();
+	console.log("State products are",productsList);
+	if(isPosted=="POST Products SUCCEEDED"){
+		history.push('/Home') 
 	}
-, [])
+	else{history.push('/Reservation') }
+
+
+	
+	
+	// axios
+    //   .get("http://localhost:3000/Product/All")
+    //   .then((res) => {
+    //     console.log("Log in Data is here", res);
+	// 	Allproducts=res.data;
+	// 	setproducts({product:res.data})
+
+    //     console.log("Log in Data is Allproducts", Allproducts);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+	// }
+}, [productsList])
 
 
 
@@ -120,10 +235,10 @@ useEffect(() => {
 									</div>
 									<div className="col-md-12">
 										<div className="form-group">
-											<select className="custom-select d-block form-control" id="person" required data-error="Please select a Meal">
-											<option disabled selected>Select Meal*</option>	
+											<select onChange={(e)=>ChangeHandleProduct(e)} className="custom-select d-block form-control" id="person" required data-error="Please select a Meal">
+											<option disabled selected>Select Meal*</option>
 
-									 		{products.product.map((value, index) => {
+									 		{productsList.map((value, index) => {
 										 return <Opt key={index} data={value} index={index} />
 										  })}
 														
@@ -134,12 +249,49 @@ useEffect(() => {
 								</div>
 								<div className="col-md-6">
 									{/* <h3>Contact Details</h3> */}
+			{/* <PlacesAutocomplete
+        value={address}
+        onChange={setaddress}
+        onSelect={handleSelect}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div>
+            <p>Latitude: {coordinates.lat}</p>
+            <p>Longitude: {coordinates.lng}</p>
+
+            <input {...getInputProps({ placeholder: "Type address!" })} />
+
+            <div>
+              {loading ? <div>...loading</div> : null}
+
+              {suggestions.map(suggestion => {
+                const style = {
+                  backgroundColor: suggestion.active ? "#41b6e6" : "#fff"
+                };
+
+                return (
+                  <div {...getSuggestionItemProps(suggestion, { style })}>
+                    {suggestion.description}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </PlacesAutocomplete> */}
+			
 									<div className="col-md-12">
 										<div className="form-group">
 											<input type="text" className="form-control" value={state.Address} onChange={(e)=>ChangeHandleAddress(e)} id="name" name="Address" placeholder="Address" required data-error="Please enter your address"/>
 											<div className="help-block with-errors"></div>
 										</div>                                 
 									</div>
+									<div className="col-md-12">
+									<div class="form-check">
+  	  									<input type="checkbox"  onClick={getCurrenWeatherPosition} className="form-check-input pl-5" id="exampleCheck1" />
+   											 <label class="form-check-label" for="exampleCheck1">Get my current address...</label>
+ 									 </div>
+									  </div>
 									<div className="col-md-12">
 										<div className="form-group">
 											<textarea type="text" placeholder="Description" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description" required data-error="Please enter your Description" />
@@ -163,7 +315,7 @@ useEffect(() => {
 								</div>
 								<div className="col-md-12">
 									<div className="submit-button text-center">
-									<button  id="submit" type="submit" className="btn btn-common disabled" >Submit</button>										<div id="msgSubmit" class="h3 text-center hidden"></div> 
+									<button  id="submit" type="submit" className="btn btn-common disabled" >Order </button>										<div id="msgSubmit" class="h3 text-center hidden"></div> 
 										<div className="clearfix"></div> 
 									</div>
 								</div>
@@ -305,6 +457,7 @@ useEffect(() => {
 		<div className="copyright">
 			<div className="container">
 				<div className="row">
+				<button className="btn btn-danger" onClick={getCurrenWeatherPosition} >CLICK HERE FOR LOCATION</button>
 					<div className="col-lg-12">
 						<p className="company-name">All Rights Reserved. &copy; 2018 <a href="#">Live Dinner Restaurant</a> Design By : 
 					<a href="https://html.design/">html design</a></p>
@@ -319,4 +472,15 @@ useEffect(() => {
     )
 }
 
-export default Reservation
+const mapStateToProps=(state)=>{
+	return{ productsList: state.FetchProd.products,
+			isPosted: state.FetchProd.status,
+    }
+  }
+  
+  const mapDispatchToProps =(dispatch)=>{
+	return{ dispatch_Products: ()=> dispatch(FetchProducts()),
+		dispatch_PostProducts: (Data,token)=> dispatch(PostProducts(Data,token))
+    }
+  }
+export default connect(mapStateToProps,mapDispatchToProps)(Reservation);
