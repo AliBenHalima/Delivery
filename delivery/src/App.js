@@ -22,6 +22,7 @@ import {store} from './Redux/store'
 import TestToDelete from './Components/TestToDelete';
 import { PostLogin } from './Redux/Authentification/actions';
 import Admin from './Components/Admin';
+import Cart from './Components/Cart';
 
 // import { connect } from 'react-redux';
 
@@ -101,7 +102,7 @@ const token = localStorage.getItem('token');
           )}>
           </Route>
           <Route path="/Contact" component={Contact} />
-
+          <Route path="/Cart" component={Cart} />
         
           {/* <Route path="/About" component={About} /> */}
           <Route path="/" component={Home} />

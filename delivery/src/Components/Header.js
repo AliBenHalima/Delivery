@@ -12,7 +12,7 @@ import { of } from 'rxjs';
 import { postfailed, refreshStore } from '../Redux/Authentification/actions';
 import { connect } from 'react-redux';
 
-function Header({dispatch_SignOut,dispatch_Refresh,isAuthenticated}) {
+function Header({dispatch_SignOut,dispatch_Refresh,CartNumber,isAuthenticated}) {
     
 const [state, setstate] = useState({isAuthenticated:false});
 const [element, setelement] = useState({elements:[]});
@@ -60,6 +60,15 @@ return state.isAuthenticated;
     
     )} />
 		);
+const LogupCheck =()=>{
+if(!isAuthenticated){
+	return <Link to="/SignUp">	<li className="nav-item"><a className="nav-link" >SignUp</a></li></Link>
+}return (null); }
+const AdminCheck =()=>{
+	if(isAuthenticated){
+		return 	<Link to="/Admin">	<li className="nav-item"><a className="nav-link" >Admin</a></li></Link>
+	}return (null); }
+	
 // module.exports.PrivateRoute;
 	const LogButton =withRouter(({history})=>{
 		checkAuth();
@@ -117,8 +126,8 @@ return state.isAuthenticated;
 					<ul className="navbar-nav ml-auto">
 						<Link to="/Home" ><li className="nav-item active"><a className="nav-link">Home</a></li></Link>
 					<Link to="/Menu">	<li className="nav-item"><a className="nav-link" >Menu</a></li> </Link>
-						<Link to="/Admin">	<li className="nav-item"><a className="nav-link" >Admin</a></li></Link>
-	<PrivateRoute path="/About"  component={About} />
+							<AdminCheck/>	
+						<PrivateRoute path="/About"  component={About} />
 						<li className="nav-item dropdown">
 							<a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Pages</a>
 							<div className="dropdown-menu" aria-labelledby="dropdown-a">
@@ -137,7 +146,19 @@ return state.isAuthenticated;
 						<Link to="/Contact"><li className="nav-item"><a className="nav-link" >Contact</a></li></Link>
 						{/* <Link to="/Login">	<li className="nav-item"><a className="nav-link" href="#">Login</a></li></Link> */}
 					<LogButton />
-					<Link to="/SignUp">	<li className="nav-item"><a className="nav-link" >SignUp</a></li></Link>
+					<LogupCheck />
+					
+					{/* <li class="d-none d-xl-block">
+                                        <div class="form-box f-right ">
+                                         
+                                            <div class="search-icon">
+                                                <i class="fas fa-search special-tag"></i>
+                                            </div>
+                                        </div>
+                                     </li> */}
+					<Link to="/Cart">	<li className="nav-item"><a className="nav-link" >Cart</a></li> </Link>
+								<li className="nav-item "><a className="nav-link">cart is {CartNumber}</a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -149,7 +170,8 @@ return state.isAuthenticated;
 }
 
 const mapStateToProps=(state)=>{
-    return{ isAuthenticated: state.postRed.authenticated
+	return{ isAuthenticated: state.postRed.authenticated,
+			CartNumber : state.ADDReducer.BasketNumber
     }
   }
   

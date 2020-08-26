@@ -1,4 +1,5 @@
 import { FetchProd_Red } from "../Products/reducers";
+import { ADDReducer } from "../Cart/reducers";
 
 const { combineReducers } = require("redux");
 const { reducer, reducer2,FetchReducer,PostReducer,LoginReducer, PostReducerLogUp} = require("./reducers");
@@ -9,6 +10,8 @@ export const combRed = combineReducers({
   // fetchred:FetchReducer,
   postRed:PostReducer,
   postLogup:PostReducerLogUp,
-  FetchProd:FetchProd_Red
+  FetchProd:FetchProd_Red,
+  ADDReducer:ADDReducer
+
   
 });

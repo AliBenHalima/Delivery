@@ -4,7 +4,8 @@ import axios from 'axios';
 export const Fetch_Products_Success = (products) => {
   return {
     type: FETCH_PRODUCTS_SUCCESS,
-    payload: products,
+    payload: products
+
   };
 };
 

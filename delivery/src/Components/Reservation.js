@@ -44,61 +44,16 @@ const showPosition = position => {
 	let lat = position.coords.latitude;
 	let lon = position.coords.longitude;
 	const url = `${API_URL}?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
-	fetchFunction(url);
-		
-		
+	fetchFunction(url);		
 };
-
 const getCurrenWeatherPosition=()=> {
 	if ('geolocation' in navigator) {
 		navigator.geolocation.getCurrentPosition(showPosition);
 	} else {
 		console.log('no Geolocation detected');
-	}
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	}};
 ///////////////////////////////////////////////////////////////
 
-
-
-
-
-	
 	const [state, setstate] = useState({Email:"",PhoneNumber:null,Address:"",ResevedFor:"",Product:""});
 	// const [products, setproducts] = useState({name:"",price:"",category:"",CookingTime:"",rating:"",Promotion:""});
 	// const [products, setproducts] = useState({product:[]});
@@ -169,9 +124,6 @@ useEffect(() => {
 	}
 	else{history.push('/Reservation') }
 
-
-	
-	
 	// axios
     //   .get("http://localhost:3000/Product/All")
     //   .then((res) => {
