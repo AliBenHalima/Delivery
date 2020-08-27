@@ -1,4 +1,4 @@
-import { ADD_TOCART, GET_FROM_CART } from "./types";
+import { ADD_TOCART, GET_FROM_CART, DECREMENT, INCREMENT } from "./types";
 
 const CartState={
  BasketNumber:0,
@@ -20,8 +20,7 @@ export const ADDReducer=(state=CartState,Action)=>{
                            let found = state.products.some(el => el._id == Action.payload._id);
                             if(!found)
                             // debugger;
-                            state.products.push(Action.payload)
-                           
+                            state.products.push(Action.payload) 
                         }
                         });
                     }else{
@@ -30,28 +29,24 @@ export const ADDReducer=(state=CartState,Action)=>{
                     console.log("new products",state.products)
                     return{
                         ...state,BasketNumber:state.BasketNumber+1,CartCost: state.CartCost + Action.payload.price
-                    }
-                
-                // state.products.forEach((e)=>{
-                //      if(e._id==Action.payload._id){
-                //         e.number++;}});
-                // if(state.products.hasOwnProperty("number")){
-                    // state.products.push({...Action.payload,number:0,incart:false})
-                // // }else{
-                // //     state.products.push({...Action.payload,number:0,incart:false})
-                // }
-                 
-                //  state.products.forEach((e)=>{
-                //  if(e._id==Action.payload._id){
-                //      console.log("element is with id",e._id)
-                //      console.log("you have click on element ",e);
-                //   let   NewNumber=e.number++;
-                //    let   NewIncart=e.incart=true;
-                //    console.log("type of cartcost",state.CartCost);
-                //      state.CartCost = eval(state.CartCost) + e.price;
-                //  }})
-           
-            
+                    }   
+                    case INCREMENT:
+                        state.products.forEach((e)=>{
+                            if(e._id==Action.payload.product._id ){
+                                e.number++;}
+                            });
+                        return{
+                            ...state,BasketNumber:state.BasketNumber+1,CartCost: state.CartCost + Action.payload.product.price
+                        }   
+                        case DECREMENT:
+                            state.products.forEach((e)=>{
+                                if(e._id==Action.payload.product._id ){
+                                    e.number--;}
+                                });
+                            return{
+                                ...state,BasketNumber:state.BasketNumber-1,CartCost: state.CartCost - Action.payload.product.price
+                            }   
+
         default:
            return state;
     }
