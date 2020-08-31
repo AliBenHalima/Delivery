@@ -19,12 +19,12 @@ export const logout = () => {
 };
 
 
-export const actionReducer2 = () => {
-  return {
-    type: VALUE,
-    payload: "this is a 2ND reducer Payload",
-  };
-};
+// export const actionReducer2 = () => {
+//   return {
+//     type: VALUE,
+//     payload: "this is a 2ND reducer Payload",
+//   };
+// };
 
 export const FetchRequest = () => {
   return {

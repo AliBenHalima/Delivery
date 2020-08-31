@@ -144,6 +144,8 @@ const AdminCheck =()=>{
 							</div>
 						</li>
 						<Link to="/Contact"><li className="nav-item"><a className="nav-link" >Contact</a></li></Link>
+						
+					
 						{/* <Link to="/Login">	<li className="nav-item"><a className="nav-link" href="#">Login</a></li></Link> */}
 					<LogButton />
 					<LogupCheck />
@@ -157,8 +159,12 @@ const AdminCheck =()=>{
                                         </div>
                                      </li> */}
 					<Link to="/Cart">	<li className="nav-item"><a className="nav-link" >Cart</a></li> </Link>
-								<li className="nav-item "><a className="nav-link">cart is {CartNumber}</a></li>
-						
+								
+							{/* <li className="nav-item "><a className="nav-link">cart is {CartNumber}</a></li> */}
+							<Link to="/Cart">	<li className="nav-item">	<span className="fa-stack fa-2x has-badge" data-count={CartNumber}>
+  						{/* <i className="fa fa-circle fa-stack-2x fa-inverse"></i> */}
+  					<i  className="fa fa-shopping-cart fa-stack-2x red-cart"></i>
+					</span></li></Link>
 					</ul>
 				</div>
 			</div>

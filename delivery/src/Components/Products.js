@@ -63,17 +63,17 @@ function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
     return (
         <React.Fragment>
                  <div className="col-lg-4 col-md-6 special-grid drinks">
-                      <div className="gallery-single fix">
+                      <div className="gallery-single fix imageClass">
                         <img
                           src={props.data.file}
-                          className="img-fluid"
+                          className="img-fluid imageClass"
                           alt="Image"
                         />
                         <div className="why-text">
                           <h4>{props.data.name}</h4>
                           <p>{props.data.category}</p>
                           <h5> ${props.data.price}</h5>
-                          <p><button onClick={Test} href="">Add</button></p>
+                          <p><button class="btn btn-lg btn-circle btn-outline-new-white" onClick={Test} href="">Add</button></p>
                           <p><button onClick={()=>affectProducts()} data-toggle="modal" data-target={"#exampleModal"+props.index} className="btn btn-lg btn-circle btn-outline-new-white"  disabled={!isAuthenticated}>Order Now!</button></p>   
                         
                                                </div>
