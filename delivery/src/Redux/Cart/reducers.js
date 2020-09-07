@@ -4,6 +4,7 @@ import {
   DECREMENT,
   INCREMENT,
   UPDATE_ON_DELETE,
+  RESET_STORE,
 } from "./types";
 
 const CartState = {
@@ -51,16 +52,26 @@ export const ADDReducer = (state = CartState, Action) => {
       };
 
     case DECREMENT:
+      let bool=false;
       state.products.forEach((e) => {
-        if (e._id == Action.payload.product._id) {
+        if (e.number >0 && e._id == Action.payload.product._id) {
           e.number--;
+          bool=true;
         }
       });
+      if(bool){
       return {
         ...state,
         BasketNumber: state.BasketNumber - 1,
         CartCost: state.CartCost - Action.payload.product.price,
-      };
+      }; } else{
+        return {
+          ...state,
+          BasketNumber: state.BasketNumber,
+          CartCost: state.CartCost 
+        };
+
+      }
 
     case UPDATE_ON_DELETE:
       console.log("prodddd is", state);
@@ -71,6 +82,14 @@ export const ADDReducer = (state = CartState, Action) => {
         BasketNumber: state.BasketNumber - Action.number,
         CartCost: state.CartCost - Action.cost * Action.number,
       };
+      case RESET_STORE:
+        
+        return {
+          ...state,
+          products:[],
+          BasketNumber: 0,
+          CartCost: 0
+        };
 
     default:
       return state;

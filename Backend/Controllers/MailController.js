@@ -32,7 +32,7 @@ async function sendMail(users, callback) {
     secure: false, // true for 465, false for other ports
     auth: {
       user: 'alibenhalima60@gmail.com',
-      pass: 'belieber2016'
+      pass: ''
     },
     tls:{rejectUnauthorized : false}
   });

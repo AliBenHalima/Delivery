@@ -1,4 +1,4 @@
-import { ADD_TOCART,GET_FROM_CART, INCREMENT, DECREMENT,UPDATE_ON_DELETE } from "./types";
+import { ADD_TOCART,GET_FROM_CART, INCREMENT, DECREMENT,UPDATE_ON_DELETE,RESET_STORE } from "./types";
 import axios from 'axios';
 
 export const AddtoCard = (product) => {
@@ -30,6 +30,11 @@ export const ChangeState = (newProduct,number,cost) => {
     cost:cost
  }
 };
+
+export const Reset_store = () => {
+  return {
+    type: RESET_STORE,
+      }};
 
 // export const GetFromCart = () => {
 //   return {

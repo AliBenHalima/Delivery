@@ -7,11 +7,13 @@ import Products from './Products'
 function Menu({ productsList, dispatch_Products }) {
 
   useEffect(() => {
-
+    console.log(productsList,"products lists issssssssssss")
+    
 	if(productsList.length < 1)
   dispatch_Products();
   
-  }, [productsList]);
+  }, []);
+  
   return (
     
     <div>
@@ -55,7 +57,7 @@ function Menu({ productsList, dispatch_Products }) {
                   href="#v-pills-home"
                   role="tab"
                   aria-controls="v-pills-home"
-                  aria-selected="true"
+                  aria-selected="true" onClick={dispatch_Products}
                 >
                   All
                 </a>
@@ -79,9 +81,9 @@ function Menu({ productsList, dispatch_Products }) {
                   aria-controls="v-pills-messages"
                   aria-selected="false"
                 >
-                  Lunch
+                  Burger
                 </a>
-                <a
+                {/* <a
                   className="nav-link"
                   id="v-pills-settings-tab"
                   data-toggle="pill"
@@ -91,7 +93,7 @@ function Menu({ productsList, dispatch_Products }) {
                   aria-selected="false"
                 >
                   Dinner
-                </a>
+                </a> */}
               </div>
             </div>
 
@@ -120,51 +122,11 @@ function Menu({ productsList, dispatch_Products }) {
                   aria-labelledby="v-pills-profile-tab"
                 >
                   <div className="row">
-                    <div className="col-lg-4 col-md-6 special-grid drinks">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-01.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Drinks 1</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $7.79</h5>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 special-grid drinks">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-02.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Drinks 2</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $9.79</h5>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 special-grid drinks">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-03.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Drinks 3</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $10.79</h5>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {productsList.map((value, index) => {
+                    if(value.category == "Drinks" )
+										 return <Products key={index} data={value} index={index} />
+										  })}
+                </div>
                 </div>
                 <div
                   className="tab-pane fade"
@@ -173,51 +135,11 @@ function Menu({ productsList, dispatch_Products }) {
                   aria-labelledby="v-pills-messages-tab"
                 >
                   <div className="row">
-                    <div className="col-lg-4 col-md-6 special-grid lunch">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-04.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Lunch 1</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $15.79</h5>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 special-grid lunch">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-05.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Lunch 2</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $18.79</h5>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 special-grid lunch">
-                      <div className="gallery-single fix">
-                        <img
-                          src="assets/images/img-06.jpg"
-                          className="img-fluid"
-                          alt="Image"
-                        />
-                        <div className="why-text">
-                          <h4>Special Lunch 3</h4>
-                          <p>Sed id magna vitae eros sagittis euismod.</p>
-                          <h5> $20.79</h5>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  {productsList.map((value, index) => {
+                    if(value.category == "Burger" )
+										 return <Products key={index} data={value} index={index} />
+										  })}
+                </div>
                 </div>
                 <div
                   className="tab-pane fade"

@@ -18,17 +18,18 @@ import { of } from 'rxjs';
 import { Provider, connect } from 'react-redux';
 import { useSelector, useDispatch } from 'react-redux';
 // import createStore from './createReduxStore'
-import {store} from './Redux/store'
+import {store, history } from './Redux/store'
+
 import TestToDelete from './Components/TestToDelete';
 import { PostLogin } from './Redux/Authentification/actions';
-import Admin from './Components/Admin';
+import Admin_ from './Components/Admin_';
 import Cart from './Components/Cart';
-
+import { ConnectedRouter } from 'connected-react-router'
 // import { connect } from 'react-redux';
 
 
 export const UserContext = React.createContext();
-
+console.log("history",history)
 function App({isAuthenticated}) {
 
   // RXJS shit 
@@ -57,6 +58,7 @@ const token = localStorage.getItem('token');
 
     
   <Provider store={store} >
+    {/* //  <ConnectedRouter history={store}> */}
 {/* <TestToDelete /> */}
 
     <Router>
@@ -98,12 +100,15 @@ const token = localStorage.getItem('token');
           <Route path="/Menu" component={Menu} />
           {/* <Route path="/Admin" component={Admin} /> */}
           <Route path="/Admin" component={()=>(
-            isAuthenticated ? <Admin />:  <Login /> 
+            isAuthenticated ? <Admin_ />:  <Login /> 
           )}>
           </Route>
           <Route path="/Contact" component={Contact} />
-          <Route path="/Cart" component={Cart} />
-        
+          <Route path="/Cart" component={()=>(
+            isAuthenticated ? <Cart />:  <Login /> 
+          )}>
+        </Route>
+        <Route path="/TestToDelete"  component={TestToDelete} />
           {/* <Route path="/About" component={About} /> */}
           <Route path="/" component={Home} />
           
@@ -112,7 +117,8 @@ const token = localStorage.getItem('token');
        </Switch>
        </div>
        </Router>
-       </Provider>
+       {/* </ConnectedRouter> */}
+         </Provider>
   );
 }
 

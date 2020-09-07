@@ -215,7 +215,7 @@
             mapify(collection, settings);
         }
     };
-
+ 
     // Trigger resizeDone event when window resize complete
     $(window).on('resize', function() {
         clearTimeout(resizeDone);
@@ -225,3 +225,6 @@
         }, 100);
     });
 })(jQuery);
+$('#submit_log').submit(function() {
+    $('#LoginModal').modal('hide');
+});

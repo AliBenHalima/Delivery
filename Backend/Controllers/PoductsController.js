@@ -103,4 +103,41 @@ router.post('/AddProduct',async (req,res)=>{
           }
         });
       });
+
+      router.get("/:category",(req,res)=>{
+        ProductsModel.find({ category:req.params.category  },async(err,doc) =>{
+            if(!err){
+                res.send( {data:doc})
+            }
+            else{
+                res.send("err")
+            }
+        });
+    });
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       module.exports=router;

@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import Products from './Products'
 import { Increment, Decrement,ChangeState } from '../Redux/Cart/actions'
@@ -33,11 +33,12 @@ const TableRow =(props)=>{
       // props.dispatch_New_Product(newArr);
       // e.preventDefault(); 
   }
+  
 
     return(
         <Fragment >
     <tr>
-    <td><img src={props.data.file} className="rounded-top w-25 h-25" /></td>
+    <td><img src={props.data.file} className="rounded-top imageClassCart imageClassCart" /></td>
     <td><strong> {props.data.name}</strong><p>{props.data.category}</p></td>
     <td className="widthClass">
     {/* <form className="form-inline"> */}
@@ -95,7 +96,7 @@ const TableRow =(props)=>{
                     </h3>
                   </div>
                   <div className="panel-body">
-                    <div className="table-responsive">
+                    <div className="table-responsive ">
                       <table className="table">
                         <thead>
                           <tr>

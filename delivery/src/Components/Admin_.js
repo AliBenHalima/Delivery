@@ -22,7 +22,7 @@ import { PostLogin, Postlogup } from "../Redux/Authentification/actions";
 import { store } from "../Redux/store";
 
 
-function Admin() {
+function Admin_() {
     const [state, setstate] = useState({ name: "", price: "" ,category:"",CookingTime:"",file:null});
 	const [store, setstore] = useState({ store: "", login: false, user: {} });
 	let history = useHistory();
@@ -178,4 +178,4 @@ function Admin() {
   );
 }
 
-export default Admin
+export default Admin_

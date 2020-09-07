@@ -94,5 +94,14 @@ table tr th {
 }
 .imageClass{
 width:100% !important;
+height:100% !important;
 max-width: 100% !important;
+}
+.Width_Height{
+  width: 200px !important;
+  height: 255px !important;
+}
+.imageClassCart{
+  width: 200px !important;
+  height: 150px !important;
 }

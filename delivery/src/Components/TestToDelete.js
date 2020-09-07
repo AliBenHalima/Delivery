@@ -1,10 +1,11 @@
-// import React, { useState ,useEffect} from 'react'
-// import '../App.css'
-// import {useSelector,useDispatch} from 'react-redux'
+import React, { useState ,useEffect} from 'react'
+import '../App.css'
+import {useSelector,useDispatch} from 'react-redux'
 // import {login} from '../Redux/actions'
 // import {actionReducer2,FetchUsers} from '../Redux/actions'
+import { Admin } from 'react-admin';
+import jsonServerProvider from 'ra-data-json-server';
 
-// function TestToDelete(props) {
 //     const [number, setnumber] = useState(1)
     
 //     // const mapStateToProps=()=>{
@@ -35,8 +36,6 @@
     
 // }, []);
 
-
-//     return (
 //         <div className="testToDelete text-center">
 //             <h1> Test </h1>
 //             <h1>State log is {truthy} </h1>
@@ -46,7 +45,21 @@
 //             <button onClick={()=>dispatch2(actionReducer2())} > Click To Dispatch Actions </button>
 //             <input value={number} onChange={ e=>{ setnumber(e.target.value)} } />
 //       <h1> list of users {userData.users} </h1>         </div>
-//     )
-// }
 
-// export default TestToDelete
+function TestToDelete(props) {
+
+const dataProvider = jsonServerProvider('https://jsonplaceholder.typicode.com/users/2');
+console.log("detailsss",props)
+
+
+    return (
+        <div>
+          
+        <Admin dataProvider={dataProvider} />
+
+        </div>
+
+    );
+}
+
+export default TestToDelete
