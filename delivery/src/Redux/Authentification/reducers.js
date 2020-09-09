@@ -69,7 +69,8 @@ export const LoginReducer=(state=initialstate,Action)=>{
 const LoginState={
     authenticated : false, 
     error:'',
-    status:""
+    status:"",
+    userId:""
 }
 
 export const PostReducer=(state=LoginState,Action)=>{
@@ -83,11 +84,11 @@ export const PostReducer=(state=LoginState,Action)=>{
             //     st.authenticated = true;
             // return {...state,st    }
             return{
-                ...state,authenticated : true,status:Action.payload,error:""
+                ...state,authenticated : true,status:Action.payload,error:"",userId:Action.userId
             }
             case POSTFAILED:
             return {
-                ...state,authenticated : false,error:Action.payload
+                ...state,authenticated : false,error:Action.payload,userId:""
             }
             case REFRESH_STORE:
                 return {

@@ -4,7 +4,9 @@ const router = express.Router();
 const UserModel = require("../Models/User");
 const auth = require("../Routes/authentification");
 const ProductsModel = require("../Models/Products");
-var multer  = require('multer')
+const jwt = require('jsonwebtoken');
+
+var multer  = require('multer');
 // var upload = multer({ dest: './images' })
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -14,6 +16,11 @@ const storage = multer.diskStorage({
 		cb(null, new Date().getTime().toString() + '_' + file.originalname);
 	}
 });
+let CheckUser =(req)=>{
+  const token = req.headers.authtoken;
+const decodedToken = jwt.verify(token, "my-secret-token");
+return decodedToken.userId;
+}
 
 
 router.get("/All",(req,res)=>{
@@ -117,6 +124,72 @@ router.post('/AddProduct',async (req,res)=>{
     
 
 
+    router.put('/likeProduct', (req, res) => {
+      console.log(CheckUser(req));
+      // Check if id was passed provided in request body
+      
+      if (!req.body.id) {
+        res.json({ success: false, message: 'No id was provided.' }); // Return error message
+      }else {
+        if(!CheckUser(req)){
+          res.json({ success: false, message: 'User not Logged in' }); // Return error message
+        }
+      else {
+        // Search the database with id
+        ProductsModel.findOne({ _id: req.body.id }, (err, product) => {
+          // Check if error was encountered
+         
+          if (err) {
+            res.json({ success: false, message: 'Invalid product id' }); // Return error message
+          } else {
+            // Check if id matched the id of a blog post in the database
+            if (!product) {
+              res.json({ success: false, message: 'That product was not found.' }); // Return error message
+            } else {
+                      // Check if the user who liked the post has already liked the blog post before
+                      if (product.likedBy.includes(CheckUser(req))) {
+                       
+                        product.likes--;
+                        const arrayIndex = product.likedBy.indexOf(CheckUser(req));
+                         // Get the index of the username in the array for removal
+                        product.likedBy.splice(arrayIndex, 1); // Remove user from array
+                       // Increment likes
+                       product.save((err) => {
+                        // Check if error was found
+                        if (err) {
+                          res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                        } else {
+                          res.json({ success: true, message: 'product disliked' ,prod:product}); // Return success message
+                        }
+                      });
+                        // res.json({ success: true, message: 'product disliked',product:product });
+                         // Return error message
+                      } else {
+                        // Check if user who liked post has previously disliked a post
+                      
+                          product.likedBy.push(CheckUser(req));
+                          product.likes++;
+                           // Add username to the array of likedBy array
+                          // Save blog post data
+                          product.save((err) => {
+                            // Check if error was found
+                            if (err) {
+                              res.json({ success: false, message: 'Something went wrong.' }); // Return error message
+                            } else {
+                              res.json({ success: true, message: 'product liked!',prod:product }); // Return success message
+                            }
+                          });
+                        }
+                      
+                      }
+                    }
+                  
+  
+              });
+            }
+          }});
+  
+  
 
 
 

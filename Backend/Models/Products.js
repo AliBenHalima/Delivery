@@ -7,6 +7,8 @@ const ProductSchema=new mongoose.Schema({
     CookingTime:{type:String,required:true},
     rating:{type:Number,required:false},
     Promotion: {type:Boolean,required:false},
+    likes: { type: Number, default: 0 },
+    likedBy: { type: Array },
     file: {type: String,required: false},
     });
 

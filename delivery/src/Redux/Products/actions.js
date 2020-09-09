@@ -1,4 +1,4 @@
-import { FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAIL,POST_PRODUCTS_SUCCESS,POST_PRODUCTS_FAIL } from "./types";
+import { FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAIL,POST_PRODUCTS_SUCCESS,POST_PRODUCTS_FAIL,LIKE_DISLIKE_SUCCESS,LIKE_DISLIKE_FAILED } from "./types";
 import axios from 'axios';
 
 export const Fetch_Products_Success = (products) => {
@@ -64,3 +64,40 @@ export const FetchProducts = () => {
     
       };
     };
+
+    // Like / Dislike Product
+
+   
+    export const Like_Dislike_Success = (success) => {
+      return {
+        type: LIKE_DISLIKE_SUCCESS,
+        payload: success,
+      };
+    };
+    
+    export const Like_Dislike_Failed = (error) => {
+      return {
+        type: LIKE_DISLIKE_FAILED,
+        payload: error,
+      };
+    };
+    export const Like_Dislike_Product = (DATA) => {
+      const token = localStorage.getItem("token");
+      return (dispatch) => {
+        // dispatch(Fetch_Comments_Request());
+        axios.put("http://localhost:3000/Product/likeProduct",DATA,{
+          headers: {
+            "authtoken": token }//the token is a variable which holds the token
+          }).then((response) => {
+          
+          if(response.data.success)
+          dispatch(Like_Dislike_Success());
+          dispatch(FetchProducts());
+        }).catch(error=>{
+            const errorMsg = error.message;
+            dispatch(Like_Dislike_Failed(error));
+        });
+    
+      };
+    };
+    

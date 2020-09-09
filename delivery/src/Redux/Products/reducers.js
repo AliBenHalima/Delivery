@@ -1,4 +1,4 @@
-import { FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAIL, POST_PRODUCTS_FAIL, POST_PRODUCTS_SUCCESS } from "./types";
+import { FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAIL, POST_PRODUCTS_FAIL, POST_PRODUCTS_SUCCESS, LIKE_DISLIKE_SUCCESS, LIKE_DISLIKE_FAILED } from "./types";
 
 const ProductsState={
     products:[],
@@ -26,6 +26,15 @@ export const FetchProd_Red=(state=ProductsState,Action)=>{
                 return {
                     ...state, status:"POST Products FAILED"
                 }
+                case LIKE_DISLIKE_SUCCESS:
+                return {
+                    ...state, status:Action.payload 
+                }
+                case LIKE_DISLIKE_FAILED:
+                    return {
+                        ...state, status:Action.payload 
+                    }
+              
           
                 
             

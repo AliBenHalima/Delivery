@@ -11,6 +11,7 @@ const SignController = require('./Controllers/SignController');
 const ProductController=require('./Controllers/PoductsController');
 const ReservationController=require('./Controllers/ReservationController');
 const MailController=require('./Controllers/MailController');
+const CommentController=require('./Controllers/CommentController');
 
 app.use(cors());
 var corsOptions = {
@@ -29,6 +30,7 @@ app.use("/Sign",SignController);
 app.use("/Product",ProductController);
 app.use("/Reservation",ReservationController);
 app.use("/Mail",MailController);
+app.use("/Comment",CommentController);
 
 
 

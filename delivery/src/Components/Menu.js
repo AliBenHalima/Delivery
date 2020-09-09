@@ -3,15 +3,16 @@ import Header from './Header'
 import { FetchProducts, PostProducts } from '../Redux/Products/actions';
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import Products from './Products'
+import { FetchComments } from '../Redux/Comments/actions';
 
-function Menu({ productsList, dispatch_Products }) {
+function Menu({ productsList, dispatch_Products,dispatchComments }) {
 
   useEffect(() => {
     console.log(productsList,"products lists issssssssssss")
     
 	if(productsList.length < 1)
   dispatch_Products();
-  
+  dispatchComments();
   }, []);
   
   return (
@@ -108,7 +109,7 @@ function Menu({ productsList, dispatch_Products }) {
                   <div className="row">
                {/* here divs */}
                {productsList.map((value, index) => {
-										 return <Products key={index} data={value} index={index} />
+										 return <Products key={index} data={value} index={index} dispatchComments={dispatchComments} />
 										  })}
 												
             
@@ -460,7 +461,8 @@ const mapStateToProps=(state)=>{
   }
   
   const mapDispatchToProps =(dispatch)=>{
-	return{ dispatch_Products: ()=> dispatch(FetchProducts())
+  return{ dispatch_Products: ()=> dispatch(FetchProducts()),
+    dispatchComments :()=>dispatch(FetchComments())
 	
     }
   }

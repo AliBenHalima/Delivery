@@ -105,3 +105,12 @@ max-width: 100% !important;
   width: 200px !important;
   height: 150px !important;
 }
+.hoverClass{
+  cursor: pointer;
+}
+.iconColor{
+  color:red;
+}
+.thumbColor{
+  color:#3b5998;
+}

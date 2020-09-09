@@ -13,7 +13,10 @@ function Prod(props) {
               alt="Image"
             />
             <div className="why-text">
+              <div className="d-flex justify-content-between">
               <h4>{props.data.name}</h4>
+              <h4>test</h4>
+              </div>
               <p>{props.data.category}</p>
               <h5> ${props.data.price}</h5>
             </div>

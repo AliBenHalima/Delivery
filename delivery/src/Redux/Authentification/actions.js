@@ -52,10 +52,12 @@ export const postrequest = () => {
   };
 };
 
-export const postsuccess = (status) => {
+export const postsuccess = (status,userId) => {
   return {
     type: POSTSUCCESS,
     payload: status,
+    userId:userId
+    
   };
 };
 
@@ -109,10 +111,11 @@ export const PostLogin =  (Data) => {
     axios.post("http://localhost:3000/Sign/SignIn",Data).then((response) => {
       const info = response.data
       console.log("infos are ",info);
+      window.alert(info);
       if (response.data.status=="POST SUCCEEDED")
       { localStorage.setItem("token",response.data.token);}
        response.data.status=="POST SUCCEEDED" ? 
-         dispatch(postsuccess(info)) : dispatch(postfailed(response.data.error))
+         dispatch(postsuccess(info,response.userId)) : dispatch(postfailed(response.data.error))
        
     }).catch(error=>{
         const errorMsg = error.message;
