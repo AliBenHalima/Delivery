@@ -14,15 +14,19 @@ import $ from 'jquery';
 import { Button, Modal,Image,Card,Form } from 'react-bootstrap';
 import CommentCard from './Cards/CommentCard';
 import axios from "axios";
+import { useToasts } from 'react-toast-notifications'
 
+
+    
 
 function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
 
+  const { addToast } = useToasts()
   const [state, setstate] = useState({Email:"",PhoneNumber:null,Address:"",ResevedFor:"",Product:"",LOGIN_Email:"",LOGIN_Password:"",Comment:""});
   let productsList =useSelector(state=>state.FetchProd.products);
-  let isAuthenticated = useSelector(state => state.postRed.authenticated);
-  const UserId = useSelector(state => state.postRed.status.userId)
+  let ReservationStatus =useSelector(state=>state.FetchProd.status);
   const Comments = useSelector(state => state.CommentsRed.Comments.data)
+  const AuthState= useSelector(state => state.postRed)
   
 
   let history = useHistory();
@@ -46,33 +50,50 @@ function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
     PhoneNumber: state.PhoneNumber,
     Address: state.Address,
 	Description: state.Description,
-	Product: state.Product
+	Product: props.data._id
   };
   let LOGINData = {
     Email: state.LOGIN_Email,
     Password: state.LOGIN_Password,
   };
-  
-  
-    // console.log("authentiifcatipn prodicts",isAuthenticated);
-    // console.log("props areee ",props.data);
-    const affectProducts=()=>{
-      // console.log("event is ",props.data);
-      
 
-    }
     const Sumbithandle = (e) => {
-      dispatch_PostProducts(Data);
-      history.push('/Menu') 
+      if(state.Email && state.PhoneNumber && state.Description && state.Address){
+      dispatch_PostProducts(Data,token);
     
+      history.push('/Menu') 
+      addToast("Resvation has been made", {
+            appearance: 'success',
+            autoDismiss: true,
+          });
+        }
+        else{
+          addToast("Reservation Error", {
+            appearance: 'error',
+            autoDismiss: true,
+          });
+        }
       e.preventDefault();
     };
+
+    
     const SumbitLOGIN_handle=(e)=>{
       props.dispatch_Users(LOGINData);
-      // if(isAuthenticated){   $("#myModal").modal('hide') }
-    //   $('#submit_log').on('click',function() {
-    //     $('#LoginModel').modal('hide');
-    // });
+  
+    if(AuthState.authenticated){
+      addToast(`Welcome ${ AuthState.status.username}`, {
+        appearance: 'success',
+        autoDismiss: true,
+      })
+    }
+    if(!AuthState.authenticated && AuthState.error ){
+      addToast(`${AuthState.error}`, {
+            appearance: 'error',
+            autoDismiss: true,
+          })        
+    }
+
+ 
    
       history.push('/Menu') 
     
@@ -91,7 +112,19 @@ function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
         }
       }).then(data=>{
         console.log("data of post comment",data);
+        if(data.data.success){
+          addToast(`${data.data.message}`, {
+            appearance: 'success',
+            autoDismiss: true,
+          })
+        }else{
+          addToast(`${data.data.message}`, {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
         props.dispatchComments();
+
 
       }) .catch((err) => {
         console.log(err);
@@ -132,9 +165,15 @@ function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
 
     const Test=()=>{
       dispatch_Cart(props.data);
+    
+ addToast("Product added to cart", {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      
     }
     const ToggleDataTarget =()=>{
-      if (isAuthenticated){
+      if (AuthState.authenticated){
        return(<React.Fragment>
           <p><button class="btn btn-lg btn-circle btn-outline-new-white" onClick={Test} href="" >Add</button></p>
           <p><button  onClick={handleShowReservation} className="btn btn-lg btn-circle btn-outline-new-white"  >Order Now!</button></p>   
@@ -153,7 +192,7 @@ function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
         return (null);
       }
       const ToggleAddComment =()=>{
-        if (isAuthenticated){
+        if (AuthState.authenticated){
          return(<React.Fragment> 
                <Button  id="submit_log" type="submit" className="btn btn-common disabled"   > Add Comment </Button>		
                </React.Fragment>)
@@ -167,20 +206,49 @@ return (null);
 const ProductId={
   id:props.data._id
 }
+
+
+
 const ToggleLike_Dislike=()=>{
   props.dispatch_Likes_Dislikes(ProductId)
+  if(AuthState.authenticated){
+    console.log("ttttttttttttttttt")
+  productsList.map((element)=>{
+    // debugger;
+    if(element._id==ProductId){
+      if(element.likedBy.includes(AuthState.status.userId)){
+       window.alert("rgzeg")
+        addToast("You Disliked this product", {
+          appearance: 'success',
+          autoDismiss: true,
+        }) 
+      }
+      else{
+        addToast("You Liked this product", {
+          appearance: 'info',
+          autoDismiss: true,
+        })
+    }
+  }
+})
+
+}
+else { addToast("You must log in first...", {
+  appearance: 'info',
+  autoDismiss: true,
+})}
 }
 const ToggleHeart=()=>{
   let check=false;
   props.data.likedBy.map((product)=>{
 
-    if(product==UserId){
+    if(product==AuthState.status.userId ){
       check=true;}
     });
     if(check ){
       return  (
         <React.Fragment> <i>{props.data.likes }</i>
-      <i class="fas fa-heart hoverClass iconColor"  disabled={!isAuthenticated} onClick={ToggleLike_Dislike}></i>
+      <i class="fas fa-heart hoverClass iconColor"  disabled={!AuthState.authenticated} onClick={ToggleLike_Dislike}></i>
      
       </React.Fragment> 
      ) 
@@ -189,13 +257,43 @@ else{
 
   return (
     <React.Fragment> <i>{props.data.likes }</i>
-    <i class="far fa-heart hoverClass" disabled={!isAuthenticated} onClick={ToggleLike_Dislike}></i></React.Fragment> )
+    <i class="far fa-heart hoverClass" disabled={!AuthState.authenticated} onClick={ToggleLike_Dislike}></i></React.Fragment> )
 }
  
   return (null)
 }
+// useEffect(() => {
+//   if(ReservationStatus==="POST Products SUCCEEDED"){
+//   addToast("Resvation has been made", {
+//     appearance: 'success',
+//     autoDismiss: true,
+//   });
+//   }
 
+
+// }, [])
+
+// useEffect(() => {
+//       if(AuthState.authenticated){
+
+//   addToast(`Welcome ${ AuthState.status.username}`, {
+//     appearance: 'success',
+//     autoDismiss: true,
+//   })
+// }
+// if(!AuthState.authenticated && AuthState.error!="" ){
+
+
+//   addToast("dd", {
+//         appearance: 'error',
+//         autoDismiss: true,
+//       })
+//       // setstate({  ...state,Email: "", Password: "" })
     
+// }
+
+// }, [])
+
   
  
 
@@ -205,13 +303,15 @@ else{
                       <div className="gallery-single fix imageClass Width_Height">
                         <img
                           src={props.data.file}
-                          className="img-fluid imageClass"
+                          className="img-fluid imageClass rounded "
                           alt="Image"
                         />
                         <div className="why-text">
-                        <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-around">
                         <h4>{props.data.name}</h4>
+                        <div >
                         <ToggleHeart />
+                        </div>
                         {/* <i>{props.data.likes }</i>
                         <i class="far fa-heart hoverClass" disabled={!isAuthenticated} onClick={ToggleLike_Dislike}></i> */}
                         <i class="fas fa-eye hoverClass"  onClick={handleShowDescription} ></i>           
@@ -226,66 +326,7 @@ else{
                       </div>
                     </div>
                     {/* model here */}
-                    <div class="modal fade" id={"exampleModal"+props.index} tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title " id="exampleModalLabel">Order {props.data.name} Now ! </h2>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form onSubmit={(e)=>Sumbithandle(e)} >
-      <div class="modal-body">
-
-      <div className="form-group">
-											<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" type="email" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email" />
-											<div className="help-block with-errors"></div>
-			</div>  
-<div className="form-group">
-											<input type="text" id="input_Number" value={state.PhoneNumber} onChange={(e)=>ChangeHandleNumber(e)} placeholder="PhoneNumber" className="time form-control picker__input" required data-error="Please enter PhoneNumber" />
-											<div className="help-block with-errors"></div>
-</div>        
-										
-
-      <div className="form-group">
-      <select onChange={(e)=>ChangeHandleProduct(e)} className="custom-select d-block form-control" id="person" required data-error="Please select a Meal">
-	{/* <option disabled selected>Select Meal*</option> */}
-
-	{/* {productsList.map((value, index) => {
-	return <Opt key={index} data={value} index={index} />
-	})} */}
-  <Opt  data={props.data}
-				/>										
-		</select>
-        <div className="help-block with-errors"></div>
-		</div> 
-								
-
-    <div className="form-group">
-											<input type="text" className="form-control" value={state.Address} onChange={(e)=>ChangeHandleAddress(e)} id="name" name="Address" placeholder="Address" required data-error="Please enter your address"/>
-											<div className="help-block with-errors"></div>
-										</div>          
-
-                    <div className="form-group">
-											<textarea type="text" placeholder="Description" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description" required data-error="Please enter your Description" />
-											<div className="help-block with-errors"></div>
-										</div> 
-
-                    <div className="submit-button text-center">
-									<button  id="submit" type="submit" className="btn btn-common disabled" >Order </button>										<div id="msgSubmit" class="h3 text-center hidden"></div> 
-										<div className="clearfix"></div> 
-									</div>
-		<div className="clearfix"></div> 
-
-      </div>
-      </form>
-    </div>
-  </div>
-  </div>
-
-
+                 
   <Modal 
         show={showReservation}
         onHide={handleCloseReservation}
@@ -293,30 +334,33 @@ else{
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Log in to continue...</Modal.Title>
+          <Modal.Title>Make a reservation</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <form onSubmit={(e)=>Sumbithandle(e)} >
       <div class="modal-body">
 
       <div className="form-group">
-											<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" type="email" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email" />
-											<div className="help-block with-errors"></div>
+			<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" red type="email" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email"  />
+      {/* <small id="emailHelp" className="form-text text-muted">
+              We'll never share your email with anyone else.
+            </small> */}
+    	<div className="help-block with-errors"></div>
 			</div>  
 <div className="form-group">
-											<input type="text" id="input_Number" value={state.PhoneNumber} onChange={(e)=>ChangeHandleNumber(e)} placeholder="PhoneNumber" className="time form-control picker__input" required data-error="Please enter PhoneNumber" />
-											<div className="help-block with-errors"></div>
+				<input type="text" id="input_Number" value={state.PhoneNumber} onChange={(e)=>ChangeHandleNumber(e)} placeholder="PhoneNumber" className="time form-control picker__input"  data-error="Please enter PhoneNumber"  />
+				<div className="help-block with-errors"></div>
 </div>        
 										
 
       <div className="form-group">
-      <select onChange={(e)=>ChangeHandleProduct(e)} className="custom-select d-block form-control" id="person" required data-error="Please select a Meal">
+      <select onChange={(e)=>ChangeHandleProduct(e)} value={props.data} className="custom-select d-block form-control" id="person"  data-error="Please select a Meal">
 	{/* <option disabled selected>Select Meal*</option> */}
 
 	{/* {productsList.map((value, index) => {
 	return <Opt key={index} data={value} index={index} />
 	})} */}
-  <Opt  data={props.data}
+  <Opt  data={props.data}  key={props.data}
 				/>										
 		</select>
         <div className="help-block with-errors"></div>
@@ -324,14 +368,17 @@ else{
 								
 
     <div className="form-group">
-											<input type="text" className="form-control" value={state.Address} onChange={(e)=>ChangeHandleAddress(e)} id="name" name="Address" placeholder="Address" required data-error="Please enter your address"/>
+											<input  type="text" className="form-control" value={state.Address} onChange={(e)=>ChangeHandleAddress(e)} id="name" name="Address" placeholder="Address"  data-error="Please enter your address"/>
 											<div className="help-block with-errors"></div>
 										</div>          
 
                     <div className="form-group">
-											<textarea type="text" placeholder="Description" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description" required data-error="Please enter your Description" />
+											<textarea type="text" placeholder="Description"  maxlength="50" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description"  data-error="Please enter your Description" />
 											<div className="help-block with-errors"></div>
-										</div> 
+									 <small id="emailHelp" className="form-text text-muted">
+             Max length 50 characters 
+            </small>
+                  	</div> 
 
                     <div className="submit-button text-center">
 									<button onClick={handleCloseReservation}  id="submit" type="submit" className="btn btn-common disabled" >Order </button>										<div id="msgSubmit" class="h3 text-center hidden"></div> 
@@ -367,7 +414,7 @@ else{
 											<div className="help-block with-errors"></div>
 			</div>  
 <div className="form-group">
-											<input type="password" id="input_password" value={state.LOGIN_Password} onChange={(e)=>ChangeHandleLOGINNumber(e)} placeholder="Password" className="time form-control picker__input" required data-error="Please enter password" />
+											<input type="password" id="input_password" value={state.LOGIN_Password} onChange={(e)=>ChangeHandleLOGINNumber(e)} placeholder="Password" className="time form-control picker__input"  data-error="Please enter password" />
 											<div className="help-block with-errors"></div>
 </div>        
 										
@@ -400,7 +447,7 @@ size="lg"
         <div className="col-md-4">
         <img
                           src={props.data.file}
-                          className="img-fluid imageClass"
+                          className="img-fluid imageClass rounded "
                           alt="Image"
                         />
           </div>
@@ -413,17 +460,19 @@ size="lg"
 
           </div>
           </div></div>
-          <div className="p-5" style={{'max-height': 'calc(100vh - 210px)', 'overflow-y': 'auto'}}>
+           <div className="pl-5 pr-5 pt-5"> <h2> Comments ... </h2> </div>
+          <div className="pr-5 pl-5 " style={{'max-height': 'calc(100vh - 210px)', 'overflow-y': 'auto'}}>
+         
           {Comments.map((value, index) => {
             if(value.PostedFor==props.data._id)
-										 return <CommentCard  key={index} data={value} index={index} dispatchComments={props.dispatchComments} />
+										 return <CommentCard  key={index} data={value} index={index} dispatchComments={props.dispatchComments}  />
 										  })}     
 
 </div>
 <Form onSubmit={AddComment}>
 <Form.Group controlId="exampleForm.ControlTextarea1" role="form">
     <Form.Label>Write a Comment...</Form.Label>
-    <Form.Control as="textarea" rows="3" value={state.Comment} onChange={(e)=>ChangeHandleComment(e)} />
+    <Form.Control placeholder="Write a Comment..." as="textarea" rows="3" value={state.Comment} onChange={(e)=>ChangeHandleComment(e)} />
     <div class="d-flex justify-content-center">
       <ToggleAddComment />
     {/* <Button  id="submit_log" type="submit"  className="btn btn-common disabled" onClick={handleShow}  > Add Comment </Button>		 */}
@@ -440,7 +489,7 @@ size="lg"
 											<div className="help-block with-errors"></div>
 			</div>  
           <div className="form-group">
-        	<input type="password" id="input_password" value={state.LOGIN_Password} onChange={(e)=>ChangeHandleLOGINNumber(e)} placeholder="Password" className="time form-control picker__input" required data-error="Please enter password" />
+        	<input type="password" id="input_password" value={state.LOGIN_Password} onChange={(e)=>ChangeHandleLOGINNumber(e)} placeholder="Password" className="time form-control picker__input"  data-error="Please enter password" />
           <div className="help-block with-errors"></div>
       </div>        
 										

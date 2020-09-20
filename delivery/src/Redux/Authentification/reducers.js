@@ -1,5 +1,5 @@
 import {LOGIN,LOGOUT, FETCH_FAILED, POSTSUCCESS,POSTREQUEST,POSTFAILED,POST_LOGUP_SUCCESS,
-    POST_LOGUP_FAILED,REFRESH_STORE} from './types';
+    POST_LOGUP_FAILED,REFRESH_STORE, SIGN_OUT} from './types';
 import {VALUE} from './types';
 import {login, postrequest,postfailed ,postsuccess} from './actions';
 import {actionReducer2} from './actions';
@@ -68,7 +68,7 @@ export const LoginReducer=(state=initialstate,Action)=>{
 
 const LoginState={
     authenticated : false, 
-    error:'',
+    error:"",
     status:"",
     userId:""
 }
@@ -88,13 +88,19 @@ export const PostReducer=(state=LoginState,Action)=>{
             }
             case POSTFAILED:
             return {
-                ...state,authenticated : false,error:Action.payload,userId:""
+                ...state,authenticated : false,error:Action.payload,userId:"",status:"you are not logged in",
             }
+            case SIGN_OUT:
+                return {
+                    authenticated:false,  status:"You are not logged in ",
+                }
+
             case REFRESH_STORE:
                 return {
                     ...state,authenticated : true
                 }
 
+                
         default:
            return state;
     }

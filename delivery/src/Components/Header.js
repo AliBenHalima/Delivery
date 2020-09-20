@@ -1,23 +1,26 @@
-import React, { Component ,useState,useEffect} from 'react'
+import React, { Component,Fragment, useState,useEffect} from 'react'
 import { BrowserRouter as Router, Route,Switch,Link,Redirect, withRouter } from 'react-router-dom';
 import About from './About';
 import {checkAuth }from './Functions';
-import {Signout } from './Functions';
 import {PrivateRoute} from './Functions';
 import { BehaviorSubject } from "rxjs";
 import {useObservable} from "react-use-observable-state";
 import * as rxjs from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { postfailed, refreshStore } from '../Redux/Authentification/actions';
-import { connect } from 'react-redux';
-import { Reset_store } from '../Redux/Cart/actions';
+import { postfailed, refreshStore,Signout } from '../Redux/Authentification/actions';
+import { Reset_store,Reset_store_attente } from '../Redux/Cart/actions';
+import { FetchProducts } from '../Redux/Products/actions';
+import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
+import { useToasts } from 'react-toast-notifications'
 
-function Header({dispatch_SignOut,dispatch_Refresh,CartNumber,isAuthenticated,dispatch_Delete}) {
-    
+
+
+function Header({dispatch_SignOut,dispatch_Refresh,CartNumber,isAuthenticated,dispatch_Delete,dispatch_Products,dispatch_Delete_attente}) {
+	const { addToast } = useToasts()
 const [state, setstate] = useState({isAuthenticated:false});
 const [element, setelement] = useState({elements:[]});
-
+const AttenteNumber = useSelector(state => state.Attente.BasketNumber)
 useEffect(() => {
 	var loadScript = function (src) {
 		var tag = document.createElement('script');
@@ -29,7 +32,7 @@ useEffect(() => {
   
 	  loadScript('assets/js/custom.js');
 	  loadScript('assets/js/contactMap.js');
-	
+	//   dispatch_Products()
 	let token = localStorage.getItem("token")
 	if(token)
 	dispatch_Refresh();
@@ -67,15 +70,23 @@ if(!isAuthenticated){
 }return (null); }
 const AdminCheck =()=>{
 	if(isAuthenticated){
-		return 	<Link to="/Admin">	<li className="nav-item"><a className="nav-link" >Admin</a></li></Link>
+		return 	<Link to="/Dashboard">	<li className="nav-item"><a className="nav-link" >Dashboard</a></li></Link>
 	}return (null); }
 
 	const CartIcon =()=>{
 		if(isAuthenticated){
-return <Link to="/Cart">	<li className="nav-item">	<span className="fa-stack fa-2x has-badge" data-count={CartNumber}>
+return (<Fragment> <Link to="/Cart">	<li className="nav-item">	<span className="fa-stack fa-2x has-badge" data-count={CartNumber}>
   		{/* <i className="fa fa-circle fa-stack-2x fa-inverse"></i> */}
   	<i  className="fa fa-shopping-cart fa-stack-2x red-cart"></i>
-</span></li></Link>		}return (null); }
+</span></li></Link>	
+<Link to="/Cartattente" className="m-auto pl-4">
+	<li className="nav-item m-auto"><span className="fa-stack fa-1x has-badge" data-count={AttenteNumber}>
+
+  		{/* <i className="fa fa-circle fa-stack-2x fa-inverse"></i> */}
+  <i class="fas fa-history fa-2x red-cart"></i>
+</span></li>	
+</Link></Fragment>)
+	}return (null); }
 
 
 // module.exports.PrivateRoute;
@@ -87,9 +98,14 @@ return <Link to="/Cart">	<li className="nav-item">	<span className="fa-stack fa-
 					 <Link to="/Logout">	<li className="nav-item"><a onClick={()=>Signout(()=>{
 						 
 						 dispatch_Delete();
+						 dispatch_Delete_attente();
 						 localStorage.removeItem("token");
 						 localStorage.removeItem("state");
 						 dispatch_SignOut();
+						 addToast("Logout Succeeded", {
+							appearance: 'info',
+							autoDismiss: true,
+						  })
 						//  props.names.next("false");
 						 history.push("/Home")
 
@@ -191,10 +207,11 @@ const mapStateToProps=(state)=>{
   }
   
   const mapDispatchToProps =(dispatch)=>{
-	return{ dispatch_SignOut: ()=> dispatch(postfailed("You Logged off successfully")),
+	return{ dispatch_SignOut: ()=> dispatch(Signout()),
 	dispatch_Refresh:()=> dispatch(refreshStore("store refreshed")),
 	dispatch_Delete:()=> dispatch(Reset_store()),
-	
+	dispatch_Products: ()=> dispatch(FetchProducts()),
+	dispatch_Delete_attente:()=> dispatch(Reset_store_attente()),
 
     }
   }

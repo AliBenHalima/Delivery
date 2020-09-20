@@ -175,7 +175,7 @@ useEffect(() => {
 			{/* <h3>Book a table</h3> */}
 									<div className="col-md-12">
 										<div className="form-group">
-											<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" type="email" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email" />
+											<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" type="email" className="datepicker picker__input form-control" name="Email" type="text"  required data-error="Please enter Email" />
 											<div className="help-block with-errors"></div>
 										</div>                                 
 									</div>

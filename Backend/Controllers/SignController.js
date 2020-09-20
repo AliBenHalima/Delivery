@@ -67,7 +67,7 @@ router.post("/SignIn",(req,res,next)=>
                     const token = jwt.sign({email:req.body.email,userId:user._id},"my-secret-token");
 
                     console.log(token);
-                   res.header("authtoken",token).send({token:token,status:"POST SUCCEEDED",userId:user._id});
+                   res.header("authtoken",token).send({token:token,status:"POST SUCCEEDED",userId:user._id,username:user.Username});
 
                     // res.json({token:token,status:"all good"});
                     // res.json();

@@ -24,6 +24,7 @@
     "react-script-hook": "^1.1.1",
     "react-script-tag": "^1.1.2",
     "react-scripts": "3.4.1",
+    "react-toast-notifications": "^2.4.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"
   },

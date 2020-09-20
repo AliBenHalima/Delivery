@@ -1,27 +1,50 @@
 import React, { useState, Fragment, useEffect } from 'react'
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import Products from './Products'
-import { Increment, Decrement,ChangeState } from '../Redux/Cart/actions'
+import { Increment, Decrement,ChangeState, Switch_Data, AttenteDelete_All } from '../Redux/Cart/actions'
 import { DECREMENT } from '../Redux/Cart/types'
 import Header from './Header';
 import { Link } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications'
+
 
 function Cart(props) {
+
+    const { addToast } = useToasts();
     const state = useSelector(state => state.ADDReducer)
     const [numberProd, setnumberProd] = useState({state:state})
     
     const Increment=(state,number)=>{
         props.dispatch_Increment(state,number);
+        addToast("Product number increased", {
+          appearance: 'success',
+          autoDismiss: true,
+        })
         setnumberProd(number++)
     }
     const Decrement=(state,number)=>{
+     
         props.dispatch_decrement(state,number);
+        // props.dispatch_Increment(state,number);
+        addToast("Product number decreased", {
+          appearance: 'success',
+          autoDismiss: true,
+        })
         setnumberProd(number--)
     }
-  
+    const deleteEventAll=(e,product)=>{
+      addToast("Products moved to Attente cart", {
+        appearance: 'success',
+        autoDismiss: true,
+      })
+      props.dispatch_to_Attente(product);
+      props.dispatch_Delete_All();
+  }
 
 const TableRow =(props)=>{
-  const deleteEvent=(e,prod)=>{
+  const deleteEvent=(prod)=>{
+    const check=window.confirm("Do you want to remove this product from cart ?")
+if(check) {
     let copy =state.products;
     const index_ = copy.indexOf(prod);
     console.log("index_ is ",index_)
@@ -29,11 +52,29 @@ const TableRow =(props)=>{
     console.log("newarr is ",copy)
     console.log("prod is ",prod)
     props.disp(copy,prod.number,prod.price);
+    addToast("Product removed", {
+      appearance: 'error',
+      autoDismiss: true,
+    })
       // const newArr= state.products.splice(index,1);
       // props.dispatch_New_Product(newArr);
       // e.preventDefault(); 
   }
-  
+  }
+  useEffect(() => {
+    state.products.forEach((element)=>{
+      if(element.number ==0){
+            let copy =state.products;
+            const index_ = copy.indexOf(element);
+            copy.splice(index_,1)
+            props.disp(copy,element.number,element.price);
+            addToast("Product removed", {
+              appearance: 'error',
+              autoDismiss: true,
+            })
+      }
+    })
+  })
 
     return(
         <Fragment >
@@ -59,7 +100,7 @@ const TableRow =(props)=>{
       {/* <input className="form-control" type="text" /> */}
         {/* <button rel="tooltip" className="btn btn-default"><i className="fa fa-pencil"></i></button> */}
         {/* <button onClick={(e)=>{deleteEvent(e,props.data)}} href="#" className="text-white btn btn-lg btn-circle btn-outline-new-white"><i className="fa fa-trash-o"></i></button> */}
-       <button className="btn btn-lg btn-circle btn-outline-new-white" onClick={(e)=>{deleteEvent(e,props.data)}}><i className="fa fa-trash-o"></i></button>
+       <button className="btn btn-lg btn-circle btn-outline-new-white" onClick={()=>{deleteEvent(props.data)}}><i className="fa fa-trash-o"></i></button>
         {/* onMouseEnter={(e)=>{deleteEvent(e,props.data)}} */}
         </div>
 </div>
@@ -149,6 +190,16 @@ const TableRow =(props)=>{
                   Pay
                   <span className="glyphicon glyphicon-chevron-right"></span>
                 </a>
+              
+                <a
+                  href="#" 
+                  onClick={(e)=>deleteEventAll(e,state.products)}
+                  className="btn btn-lg btn-circle btn-outline-new-white pull-right"
+                >
+                En Attente
+                  <span className="glyphicon glyphicon-chevron-right"></span>
+                </a>
+          
               </div>
             </div>
           </div>
@@ -170,7 +221,9 @@ const TableRow =(props)=>{
 const mapDispatchToProps =(dispatch)=>{
 	return{ dispatch_Increment: (state,number)=> dispatch(Increment(state,number)),
     dispatch_decrement: (state,number)=> dispatch(Decrement(state,number)),
-    dispatch_New_Product:(newProduct,number,cost)=>dispatch(ChangeState(newProduct,number,cost))
+    dispatch_New_Product:(newProduct,number,cost)=>dispatch(ChangeState(newProduct,number,cost)),
+    dispatch_to_Attente:(Products)=>dispatch(Switch_Data(Products)),
+    dispatch_Delete_All:()=>dispatch(AttenteDelete_All()),
     }
   }
 export default connect(null,mapDispatchToProps)(Cart);

@@ -20,10 +20,14 @@ import { of } from "rxjs";
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import { PostLogin, Postlogup } from "../Redux/Authentification/actions";
 import { store } from "../Redux/store";
+import { useToasts } from 'react-toast-notifications'
 
+
+    
 function Login({dispatch_Users,isAuthenticated}) {
- 
-  
+  const { addToast } = useToasts();
+  const Authstate = useSelector(state => state.postRed)
+  const username = useSelector(state => state.postRed.status.username)
   const [state, setstate] = useState({ Email: "", Password: "" });
   const [store, setstore] = useState({ store: "", login: false, user: {} });
   let history = useHistory();
@@ -40,14 +44,10 @@ function Login({dispatch_Users,isAuthenticated}) {
 
   const Sumbithandle = (e) => {
     console.log("isauthen 1st", isAuthenticated);
-    //console.log("isauthen isdsdfdsf", dsf);
 
-   // debugger;
-    // console.log("state is",state);
     dispatch_Users(Data);
+ 
     
-    // const storeValue = props.store.getState()
-    // setstore({store:localStorage.getItem("token"),login:true})
     console.log("isauthen 2nd", isAuthenticated);
     // setTimeout(() => {
     //   console.log("isauthen ", isAuthenticated);
@@ -58,8 +58,7 @@ function Login({dispatch_Users,isAuthenticated}) {
     // console.log("store is",store.getState())
     // history.push('/Home')
     e.preventDefault();
-    
-    // }
+  
     //  props.names.next("true");
     // console.log("Login props are ",props)
   };
@@ -91,8 +90,39 @@ function Login({dispatch_Users,isAuthenticated}) {
   useEffect(() => {
    console.log("useeffect auth",isAuthenticated);
    isAuthenticated ? history.push('/Home') : history.push('/Login')
+   if(isAuthenticated){
+    addToast(`Welcome ${username}`, {
+          appearance: 'success',
+          autoDismiss: true,
+        })
+      }
+      if(!isAuthenticated && Authstate.error){
 
-  });
+      
+        addToast(`${Authstate.error}`, {
+              appearance: 'error',
+              autoDismiss: true,
+            })
+            setstate({  ...state,Email: "", Password: "" })
+          
+      }
+        //  if(Authstate.error !=""){
+        //   addToast(`${Authstate.error}`, {
+        //     appearance: 'error',
+        //     autoDismiss: true,
+        //   })
+        
+
+        // }
+  //  if(!username){
+  //   addToast(`Welcome ${username}`, {
+  //         appearance: 'success',
+  //         autoDismiss: true,
+  //       })
+      
+  //       }
+
+  },[Authstate]);
 
   // useEffect(() => {
   
@@ -126,13 +156,14 @@ function Login({dispatch_Users,isAuthenticated}) {
           <div className="form-group">
             <label for="exampleInputEmail1">Email address</label>
             <input
-              type="text"
+              type="email"
               onChange={(e) => ChangeHandleEmail(e)}
               value={state.Email}
               className="datepicker picker__input form-control widthclass"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="Enter email"
+              required
             />
             <small id="emailHelp" className="form-text text-muted">
               We'll never share your email with anyone else.
@@ -147,6 +178,7 @@ function Login({dispatch_Users,isAuthenticated}) {
               className="datepicker picker__input form-control widthclass"
               id="exampleInputPassword1"
               placeholder="Password"
+              required
             />
           </div>
           <div className="form-check">

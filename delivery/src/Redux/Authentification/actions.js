@@ -1,5 +1,5 @@
 // const { LOGIN } = require("./types")
-import { LOGIN,LOGOUT,POSTREQUEST,POSTSUCCESS,POSTFAILED,POST_LOGUP_REQUEST,POST_LOGUP_SUCCESS,POST_LOGUP_FAILED, REFRESH_STORE} from "./types";
+import { LOGIN,LOGOUT,POSTREQUEST,POSTSUCCESS,POSTFAILED,POST_LOGUP_REQUEST,POST_LOGUP_SUCCESS,POST_LOGUP_FAILED, REFRESH_STORE, SIGN_OUT} from "./types";
 import { VALUE } from "./types";
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILED } from "./types";
 import axios from 'axios';
@@ -61,10 +61,16 @@ export const postsuccess = (status,userId) => {
   };
 };
 
-export const postfailed = (status) => {
+export const postfailed = (error) => {
   return {
     type: POSTFAILED,
-    payload: status,
+    payload: error,
+  };
+};
+
+export const Signout = () => {
+  return {
+    type: SIGN_OUT,
   };
 };
 
@@ -111,7 +117,6 @@ export const PostLogin =  (Data) => {
     axios.post("http://localhost:3000/Sign/SignIn",Data).then((response) => {
       const info = response.data
       console.log("infos are ",info);
-      window.alert(info);
       if (response.data.status=="POST SUCCEEDED")
       { localStorage.setItem("token",response.data.token);}
        response.data.status=="POST SUCCEEDED" ? 

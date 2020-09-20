@@ -25,12 +25,25 @@ import { PostLogin } from './Redux/Authentification/actions';
 import Admin_ from './Components/Admin_';
 import Cart from './Components/Cart';
 import { ConnectedRouter } from 'connected-react-router'
+import AttenteCart from './Components/AttenteCart';
+import Dashboard from './Components/Admin/Dashboard';
+import { FetchProducts } from './Redux/Products/actions';
+import DashboardUsers from './Components/Admin/DashboardUsers';
 // import { connect } from 'react-redux';
+
+import { ToastProvider } from 'react-toast-notifications';
+import DashboardReservation from './Components/Admin/DashboardReservation';
+// import { Snack } from '../snackbar';
+
 
 
 export const UserContext = React.createContext();
 console.log("history",history)
-function App({isAuthenticated}) {
+
+function App({isAuthenticated,dispatch_Products}) {
+  
+  dispatch_Products();
+
 
   // RXJS shit 
   let tokenExists="nodata";
@@ -56,7 +69,12 @@ const data=(PassedData)=>{
 const token = localStorage.getItem('token');
   return ( 
 
-    
+    <ToastProvider
+  autoDismiss
+  autoDismissTimeout={2000}
+  // components={{ Toast: Snack }}
+  placement="top-right"
+>
   <Provider store={store} >
     {/* //  <ConnectedRouter history={store}> */}
 {/* <TestToDelete /> */}
@@ -110,16 +128,24 @@ const token = localStorage.getItem('token');
         </Route>
         <Route path="/TestToDelete"  component={TestToDelete} />
           {/* <Route path="/About" component={About} /> */}
+          <Route path="/CartAttente" component={AttenteCart} />
+          <Route path="/Dashboard" component={Dashboard} />
+          <Route path="/DashboardUsers" component={DashboardUsers} />
+          <Route path="/DashboardReservation" component={DashboardReservation} />
+
+          
           <Route path="/" component={Home} />
           
-    
+          
         
        </Switch>
        </div>
        </Router>
        {/* </ConnectedRouter> */}
          </Provider>
+         </ToastProvider>
   );
+
 }
 
 const mapStateToProps=(state)=>{
@@ -128,7 +154,8 @@ const mapStateToProps=(state)=>{
 }
 
 const mapDispatchToProps =(dispatch)=>{
-  return{ dispatch_Users: ()=> dispatch(PostLogin())
+  return{ dispatch_Users: ()=> dispatch(PostLogin()),
+    dispatch_Products: ()=> dispatch(FetchProducts()),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(App);

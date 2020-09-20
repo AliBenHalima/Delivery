@@ -6,10 +6,11 @@ const auth = require("../Routes/authentification");
 const jwt = require('jsonwebtoken');
 
 
+
 router.get("/All",async (req,res)=>{
     UserModel.find((err,documents)=>{
         if(!err){
-            res.send({ data: documents, "info":req.verified })
+            res.send(documents)
         }
         else{
             res.send("Error")
@@ -18,9 +19,9 @@ router.get("/All",async (req,res)=>{
 });
 
 router.get("/:id",async (req,res)=>{
-    UserModel.findOne({ "_id": req.params.id },((err,documents)=>{
+    UserModel.findOne({ "_id": req.params.id },((err,docs)=>{
         if(!err){
-            res.send({ data: documents })
+            res.send({ data: docs })
         }
         else{
             res.send("Error")
@@ -39,6 +40,23 @@ router.get("/:name",async (req,res)=>{
     }));
 }
 );
+
+
+router.delete('/Delete/:id',async (req,res)=>{
+    UserModel.findById(req.params.id).then((user) => {
+        user.remove((err) => {
+        if (err) {
+          res.json({ success: false, message: err }); // Return error message
+        } else {
+          res.json({ success: true, message: 'user removed!' }); // Return success message
+        }
+      });
+    }).catch(err=>
+        {
+            console.log(err);
+        });
+
+      });
 
 
 module.exports=router;

@@ -1,4 +1,4 @@
-import { ADD_TOCART,GET_FROM_CART, INCREMENT, DECREMENT,UPDATE_ON_DELETE,RESET_STORE } from "./types";
+import { ADD_TOCART,GET_FROM_CART,INCREMENT_ATTENTE,DECREMENT_ATTENTE, INCREMENT,RESET_STORE_ATTENTE, DECREMENT,UPDATE_ON_DELETE,RESET_STORE, ATTENTE_DELETE, SWITCH_DATA, UPDATE_ON_DELETE_ATTENTE } from "./types";
 import axios from 'axios';
 
 export const AddtoCard = (product) => {
@@ -30,11 +30,54 @@ export const ChangeState = (newProduct,number,cost) => {
     cost:cost
  }
 };
+export const ChangeStateAttente = (newProduct,number,cost) => {
+  return {
+    type: UPDATE_ON_DELETE_ATTENTE ,
+    payload: {product:newProduct} ,
+    number:number,
+    cost:cost
+ }
+};
 
 export const Reset_store = () => {
   return {
     type: RESET_STORE,
       }};
+
+export const Reset_store_attente = () => {
+  return {
+    type: RESET_STORE_ATTENTE,
+      }};
+
+
+ export const AttenteDelete_All = () => {
+     return {
+        type: ATTENTE_DELETE,
+        payload: ""
+         
+     }
+   };
+      
+
+export const Switch_Data = (Products) => {
+   return {
+      type: SWITCH_DATA,
+      payload: Products
+         
+    }
+  };
+  export const IncrementAttente = (product,number) => {
+  return {
+    type: INCREMENT_ATTENTE,
+    payload: {product:product,number:number}
+  };
+};
+
+export const DecrementAttente = (product,number) => {
+  return {
+    type: DECREMENT_ATTENTE,
+    payload: {product:product,number:number}  }
+};
 
 // export const GetFromCart = () => {
 //   return {

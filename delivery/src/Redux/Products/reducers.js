@@ -1,4 +1,4 @@
-import { FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAIL, POST_PRODUCTS_FAIL, POST_PRODUCTS_SUCCESS, LIKE_DISLIKE_SUCCESS, LIKE_DISLIKE_FAILED } from "./types";
+import { FETCH_PRODUCTS_SUCCESS,FETCH_PRODUCTS_FAIL, POST_PRODUCTS_FAIL, POST_PRODUCTS_SUCCESS, LIKE_DISLIKE_SUCCESS, LIKE_DISLIKE_FAILED, REFRESH_STORE_PROD } from "./types";
 
 const ProductsState={
     products:[],
@@ -34,6 +34,10 @@ export const FetchProd_Red=(state=ProductsState,Action)=>{
                     return {
                         ...state, status:Action.payload 
                     }
+                    case REFRESH_STORE_PROD:
+                        return {
+                            ...state, products:Action.payload, status:"STORE REFRESHED !!!"
+                        }
               
           
                 

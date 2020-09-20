@@ -4,13 +4,16 @@ import { FetchProducts, PostProducts } from '../Redux/Products/actions';
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import Products from './Products'
 import { FetchComments } from '../Redux/Comments/actions';
+import { useToasts } from 'react-toast-notifications'
+
+
 
 function Menu({ productsList, dispatch_Products,dispatchComments }) {
+  const { addToast } = useToasts()
+  const AuthState= useSelector(state => state.postRed)
 
   useEffect(() => {
-    console.log(productsList,"products lists issssssssssss")
-    
-	if(productsList.length < 1)
+  if(productsList.length < 1)
   dispatch_Products();
   dispatchComments();
   }, []);
@@ -124,7 +127,7 @@ function Menu({ productsList, dispatch_Products,dispatchComments }) {
                 >
                   <div className="row">
                   {productsList.map((value, index) => {
-                    if(value.category == "Drinks" )
+                    if(value.category == "5f63216d4d327f0540f39200" )
 										 return <Products key={index} data={value} index={index} />
 										  })}
                 </div>
@@ -137,7 +140,7 @@ function Menu({ productsList, dispatch_Products,dispatchComments }) {
                 >
                   <div className="row">
                   {productsList.map((value, index) => {
-                    if(value.category == "Burger" )
+                    if(value.category == "5f6321724d327f0540f39201" )
 										 return <Products key={index} data={value} index={index} />
 										  })}
                 </div>

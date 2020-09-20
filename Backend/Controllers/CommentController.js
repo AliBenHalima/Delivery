@@ -49,7 +49,7 @@ router.get("/list",async (req,res)=>{
 router.get("/:id",async (req,res)=>{
   // console.log( req.userData.userId);
   // console.log( req.userData.userId);
-  Comment.find({ PostedFor: req.params.id },((err,docs)=>{
+  Comment.find({ _id: req.params.id },((err,docs)=>{
     if(!err){
         res.send({ data: docs })
     }
@@ -120,7 +120,7 @@ router.post('/newComment', (req, res) => {
                 res.json({ success: false, message: err }); // Return general error message
               }
             } else {
-              res.json({ success: true, message: 'comment saved!' }); // Return success message
+              res.json({ success: true, message: 'Comment Added' }); // Return success message
             }
           });
         }

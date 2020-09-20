@@ -1,13 +1,12 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useEffect,useState } from 'react'
 import { Button, Modal,Image,Card } from 'react-bootstrap';
 import axios from "axios";
 import { useSelector } from 'react-redux';
 
-
 function CommentCard(props) {
   const token = localStorage.getItem("token");
   const LoginState = useSelector(state => state.postRed);
-  
+  const [name, setname] = useState("");
  let isAuthenticated = LoginState.authenticated;
   const DeleteComponent=()=>{
     if(props.data.createdBy==LoginState.status.userId){
@@ -119,17 +118,29 @@ else{
 </React.Fragment> )
   return (null)
 }}
-  
-  
+let user =[]
+
+  axios.get("http://localhost:3000/User/" + props.data.createdBy).then((res) => {
+    
+     user = res.data.data.Username;
+  //  window.alert(res)
+   console.log(user);
+   setname(user);
+   
+  }).catch(error=>{
+      console.log(error)
+  });
+
+
     return (
   
                        
         <React.Fragment>
             <Card>
-  <Card.Header as="h5">
+  <Card.Header className="h5 ">
     <div className="d-flex justify-content-between">
    
-        <div> {props.data.createdBy}</div>
+        <div><h2>{name}</h2></div>
         <DeleteComponent />
        {/* <button onClick={DeleteComment} className="btn btn-lg btn-circle btn-outline-new-white"><i className="fa fa-trash-o"></i></button> */}
     </div>

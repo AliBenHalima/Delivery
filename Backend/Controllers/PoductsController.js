@@ -35,6 +35,18 @@ router.get("/All",(req,res)=>{
 });
 
 
+router.get("/:id",async (req,res)=>{
+  ProductsModel.findOne({ "_id": req.params.id },((err,documents)=>{
+      if(!err){
+          res.send(documents)
+      }
+      else{
+          res.send("Error")
+      }
+  }));
+});
+
+
 router.post('/AddProduct',async (req,res)=>{
     let product = new ProductsModel({
         name : req.body.name,
@@ -69,6 +81,21 @@ router.post('/AddProduct',async (req,res)=>{
         }
       });})
 
+      router.delete('/Delete/:id',async (req,res)=>{
+        ProductsModel.findById(req.params.id).then((product) => {
+          product.remove((err) => {
+            if (err) {
+              res.json({ success: false, message: err }); // Return error message
+            } else {
+              res.json({ success: true, message: 'Product deleted!' }); // Return success message
+            }
+          });
+        }).catch(err=>
+            {
+                console.log(err);
+            });
+
+          });
 
       router.post('/AddProductTest', multer({storage: storage}).single("file"),(req, res, next) => {
         let url = req.protocol + "://" + req.get("host");
@@ -193,6 +220,45 @@ router.post('/AddProduct',async (req,res)=>{
 
 
 
+          router.put('/UpdateProduct/:id',multer({storage: storage}).single("file"),(req, res) => {
+            let url = req.protocol + "://" + req.get("host");
+            // Check if id was provided
+            if (!req.params.id) {
+              res.json({ success: false, message: 'No Product id provided' }); // Return error message
+            } else {
+              // Check if id exists in database
+              ProductsModel.findOne({ _id: req.params.id }, (err, product) => {
+                // Check if id is a valid ID
+                if (err) {
+                  res.json({ success: false, message: 'Not a valid Product id' }); // Return error message
+                } else {
+                  // Check if id was found in the database
+                  if (!product) {
+                    res.json({ success: false, message: 'Product id was not found.' }); // Return error message
+                  }
+                  else {
+                     // Save latest blog title
+                     product.name = req.body.name; 
+                     product.price = req.body.price;
+                     product.category = req.body.category;
+                     product.CookingTime = req.body.CookingTime;
+                     product.file =   url + "/images/" + req.file.filename;// Save latest body
+
+                     product.save((err) => {
+                      if (err) {
+                        if (err.errors) {
+                          res.json({ success: false, message: 'Please ensure form is filled out properly' });
+                        } else {
+                          res.json({ success: false, message: err }); // Return error message
+                        }
+                      } else {
+                        res.json({ success: true, message: 'product Updated!' }); // Return success message
+                      }
+                    });
+                  }
+            }
+          });
+        } });
 
 
 

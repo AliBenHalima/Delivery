@@ -1,5 +1,8 @@
-import { FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAIL,POST_PRODUCTS_SUCCESS,POST_PRODUCTS_FAIL,LIKE_DISLIKE_SUCCESS,LIKE_DISLIKE_FAILED } from "./types";
+import { FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAIL,POST_PRODUCTS_SUCCESS,POST_PRODUCTS_FAIL,LIKE_DISLIKE_SUCCESS,LIKE_DISLIKE_FAILED, REFRESH_STORE_PROD } from "./types";
 import axios from 'axios';
+
+
+
 
 export const Fetch_Products_Success = (products) => {
   return {
@@ -12,7 +15,8 @@ export const Fetch_Products_Success = (products) => {
 export const Fetch_Products_Fail = (error) => {
   return {
     type: FETCH_PRODUCTS_FAIL,
-    payload: error,
+    payload: {},
+    error:error
   };
 };
 
@@ -20,7 +24,7 @@ export const FetchProducts = () => {
     return (dispatch) => {
         axios.get("http://localhost:3000/Product/All").then((res) => {
           console.log("Log in Data is here", res);
-          const Allproducts=res.data;
+         const Allproducts=res.data;
         dispatch(Fetch_Products_Success(Allproducts));
       }).catch(error=>{
           const errorMsg = error.message;
@@ -29,6 +33,30 @@ export const FetchProducts = () => {
   
     };
   };
+
+  export const refreshStore_Prod = (products) => {
+    return {
+      type: REFRESH_STORE_PROD,
+      payload: products,
+    
+    };
+  };
+
+  export const RefreshStore = () => {
+    return (dispatch) => {
+        axios.get("http://localhost:3000/Product/All").then((res) => {
+          console.log("Log in Data is here", res);
+           const Allproducts=res.data;
+        dispatch(refreshStore_Prod(Allproducts));
+      }).catch(error=>{
+          const errorMsg = error.message;
+          dispatch(Fetch_Products_Fail(errorMsg));
+      });
+  
+    };
+  };
+  
+  
   
   //Post reservations 
   export const Post_Products_Success = (data) => {
@@ -49,12 +77,15 @@ export const FetchProducts = () => {
 
     export const PostProducts = (Data,token) => {
       return (dispatch) => {
+        console.log("dATA of Res",Data);
         axios.post("http://localhost:3000/Reservation/AddReservation", Data, {
           headers: {
             "authtoken": token
           },
         }).then((res) => {
-            console.log("Redux  Data is here", res);
+            console.log("Redux  Data is here for post reservation", res);
+       
+          
 
           dispatch(Post_Products_Success(res.data));
         }).catch(error=>{
@@ -83,6 +114,8 @@ export const FetchProducts = () => {
     };
     export const Like_Dislike_Product = (DATA) => {
       const token = localStorage.getItem("token");
+      
+
       return (dispatch) => {
         // dispatch(Fetch_Comments_Request());
         axios.put("http://localhost:3000/Product/likeProduct",DATA,{
@@ -91,8 +124,11 @@ export const FetchProducts = () => {
           }).then((response) => {
           
           if(response.data.success)
-          dispatch(Like_Dislike_Success());
+          console.log("heeeeeeeeeeeeeeere",response)
+       
+          dispatch(Like_Dislike_Success(response.data.prod.likes));
           dispatch(FetchProducts());
+         
         }).catch(error=>{
             const errorMsg = error.message;
             dispatch(Like_Dislike_Failed(error));

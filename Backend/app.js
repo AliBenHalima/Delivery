@@ -12,6 +12,8 @@ const ProductController=require('./Controllers/PoductsController');
 const ReservationController=require('./Controllers/ReservationController');
 const MailController=require('./Controllers/MailController');
 const CommentController=require('./Controllers/CommentController');
+const CategoryController=require('./Controllers/CategoryController');
+
 
 app.use(cors());
 var corsOptions = {
@@ -31,6 +33,7 @@ app.use("/Product",ProductController);
 app.use("/Reservation",ReservationController);
 app.use("/Mail",MailController);
 app.use("/Comment",CommentController);
+app.use("/Category",CategoryController);
 
 
 
