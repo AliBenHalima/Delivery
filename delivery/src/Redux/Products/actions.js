@@ -1,6 +1,6 @@
 import { FETCH_PRODUCTS_SUCCESS, FETCH_PRODUCTS_FAIL,POST_PRODUCTS_SUCCESS,POST_PRODUCTS_FAIL,LIKE_DISLIKE_SUCCESS,LIKE_DISLIKE_FAILED, REFRESH_STORE_PROD } from "./types";
 import axios from 'axios';
-
+const token = localStorage.getItem("token");
 
 
 
@@ -22,7 +22,10 @@ export const Fetch_Products_Fail = (error) => {
 
 export const FetchProducts = () => {
     return (dispatch) => {
-        axios.get("http://localhost:3000/Product/All").then((res) => {
+        axios.get("http://localhost:3000/Product/All",{
+          headers: {
+            "authtoken": token
+          }}).then((res) => {
           console.log("Log in Data is here", res);
          const Allproducts=res.data;
         dispatch(Fetch_Products_Success(Allproducts));
@@ -44,7 +47,10 @@ export const FetchProducts = () => {
 
   export const RefreshStore = () => {
     return (dispatch) => {
-        axios.get("http://localhost:3000/Product/All").then((res) => {
+        axios.get("http://localhost:3000/Product/All",{
+          headers: {
+            "authtoken": token
+          }}).then((res) => {
           console.log("Log in Data is here", res);
            const Allproducts=res.data;
         dispatch(refreshStore_Prod(Allproducts));

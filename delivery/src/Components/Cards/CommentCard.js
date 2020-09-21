@@ -2,8 +2,12 @@ import React, { Fragment,useEffect,useState } from 'react'
 import { Button, Modal,Image,Card } from 'react-bootstrap';
 import axios from "axios";
 import { useSelector } from 'react-redux';
+import { useToasts } from 'react-toast-notifications'
+
+
 
 function CommentCard(props) {
+  const { addToast } = useToasts()
   const token = localStorage.getItem("token");
   const LoginState = useSelector(state => state.postRed);
   const [name, setname] = useState("");
@@ -33,7 +37,11 @@ e.preventDefault();
     id:props.data._id
   }
   const LikeComment=(e)=>{
-  
+    if(!isAuthenticated)
+    addToast("you must login first", {
+      appearance: 'info',
+      autoDismiss: true,
+    })
     axios.put("http://localhost:3000/Comment/likeComment", data,{
       headers: {
         "authtoken": token //the token is a variable which holds the token
@@ -49,7 +57,11 @@ e.preventDefault();
   }
 
  const  DislikeComment=(e)=>{
-  
+  if(!isAuthenticated)
+  addToast("you must login first", {
+    appearance: 'info',
+    autoDismiss: true,
+  })
     axios.put("http://localhost:3000/Comment/DislikeComment/", data,{
       headers: {
         "authtoken": token //the token is a variable which holds the token

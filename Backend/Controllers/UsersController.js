@@ -4,6 +4,7 @@ const router = express.Router();
 const UserModel = require("../Models/User");
 const auth = require("../Routes/authentification");
 const jwt = require('jsonwebtoken');
+const { isAuth4User } = require("./Auth");
 
 
 
@@ -42,7 +43,7 @@ router.get("/:name",async (req,res)=>{
 );
 
 
-router.delete('/Delete/:id',async (req,res)=>{
+router.delete('/Delete/:id',isAuth4User,async (req,res)=>{
     UserModel.findById(req.params.id).then((user) => {
         user.remove((err) => {
         if (err) {

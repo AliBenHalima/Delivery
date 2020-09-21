@@ -18,7 +18,7 @@ router.get("/list",async (req,res)=>{
 
   Comment.find((err,docs)=>{
       if(!err){
-        res.json({ success: false, data: docs }); // Return error message
+        res.json({ success: true, data: docs }); // Return error message
       }
       else{
           res.send("Error")

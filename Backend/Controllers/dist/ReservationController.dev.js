@@ -12,7 +12,10 @@ var ReservationModel = require("../Models/Reservation");
 
 var jwt = require('jsonwebtoken');
 
-router.get("/All", function (req, res) {
+var _require = require("./Auth"),
+    isAuth4Reservation = _require.isAuth4Reservation;
+
+router.get("/All", isAuth4Reservation, function (req, res) {
   ReservationModel.find(function (err, documents) {
     if (!err) {
       res.send(documents);
@@ -73,7 +76,7 @@ router.post('/AddReservation', function (req, res) {
     }
   });
 });
-router["delete"]('/Delete/:id', function _callee(req, res) {
+router["delete"]('/Delete/:id', isAuth4Reservation, function _callee(req, res) {
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
@@ -103,7 +106,7 @@ router["delete"]('/Delete/:id', function _callee(req, res) {
     }
   });
 });
-router.put('/UpdateReservation/:id', function (req, res) {
+router.put('/UpdateReservation/:id', isAuth4Reservation, function (req, res) {
   // Check if id was provided
   if (!req.params.id) {
     res.json({

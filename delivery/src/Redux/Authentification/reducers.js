@@ -70,7 +70,8 @@ const LoginState={
     authenticated : false, 
     error:"",
     status:"",
-    userId:""
+    userId:"",
+    role:""
 }
 
 export const PostReducer=(state=LoginState,Action)=>{
@@ -84,7 +85,7 @@ export const PostReducer=(state=LoginState,Action)=>{
             //     st.authenticated = true;
             // return {...state,st    }
             return{
-                ...state,authenticated : true,status:Action.payload,error:"",userId:Action.userId
+                ...state,authenticated : true,status:Action.payload,error:"",userId:Action.userId,role:Action.role
             }
             case POSTFAILED:
             return {

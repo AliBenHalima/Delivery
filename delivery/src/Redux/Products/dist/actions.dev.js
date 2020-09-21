@@ -11,6 +11,8 @@ var _axios = _interopRequireDefault(require("axios"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+var token = localStorage.getItem("token");
+
 var Fetch_Products_Success = function Fetch_Products_Success(products) {
   return {
     type: _types.FETCH_PRODUCTS_SUCCESS,
@@ -32,7 +34,11 @@ exports.Fetch_Products_Fail = Fetch_Products_Fail;
 
 var FetchProducts = function FetchProducts() {
   return function (dispatch) {
-    _axios["default"].get("http://localhost:3000/Product/All").then(function (res) {
+    _axios["default"].get("http://localhost:3000/Product/All", {
+      headers: {
+        "authtoken": token
+      }
+    }).then(function (res) {
       console.log("Log in Data is here", res);
       var Allproducts = res.data;
       dispatch(Fetch_Products_Success(Allproducts));
@@ -56,7 +62,11 @@ exports.refreshStore_Prod = refreshStore_Prod;
 
 var RefreshStore = function RefreshStore() {
   return function (dispatch) {
-    _axios["default"].get("http://localhost:3000/Product/All").then(function (res) {
+    _axios["default"].get("http://localhost:3000/Product/All", {
+      headers: {
+        "authtoken": token
+      }
+    }).then(function (res) {
       console.log("Log in Data is here", res);
       var Allproducts = res.data;
       dispatch(refreshStore_Prod(Allproducts));

@@ -117,3 +117,8 @@ max-width: 100% !important;
 .Comments{
   height:600px !important ;   
 }
+.navbar-brand{
+  background-color : transparent !important;
+  box-shadow :none !important;
+
+}

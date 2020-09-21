@@ -18,13 +18,13 @@ import * as rxjs from "rxjs";
 import { map, startWith } from "rxjs/operators";
 import { of } from "rxjs";
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
-import { PostLogin, Postlogup } from "../Redux/Authentification/actions";
+import { PostLogin, Postlogup,postsuccess,postfailed } from "../Redux/Authentification/actions";
 import { store } from "../Redux/store";
 import { useToasts } from 'react-toast-notifications'
 
 
     
-function Login({dispatch_Users,isAuthenticated}) {
+function Login({dispatch_Users,isAuthenticated,...props}) {
   const { addToast } = useToasts();
   const Authstate = useSelector(state => state.postRed)
   const username = useSelector(state => state.postRed.status.username)
@@ -46,7 +46,32 @@ function Login({dispatch_Users,isAuthenticated}) {
     console.log("isauthen 1st", isAuthenticated);
 
     dispatch_Users(Data);
- 
+    axios.post("http://localhost:3000/Sign/SignIn",Data).then((response) => {
+      const info = response.data
+      console.log("infos are ",info);
+      if (response.data.status=="POST SUCCEEDED")
+      { localStorage.setItem("token",response.data.token); 
+       props.PostSuccess(info,response.userId) 
+   
+      }
+       else{
+        props.PostFailed(response.data.error)
+        addToast(response.data.status, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+       }
+         
+         
+    }).catch(error=>{
+        const errorMsg = error.message;
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+        props.PostFailed(errorMsg);
+    });
+
     
     console.log("isauthen 2nd", isAuthenticated);
     // setTimeout(() => {
@@ -72,20 +97,20 @@ function Login({dispatch_Users,isAuthenticated}) {
   const ChangeHandlePassword = (e) => {
     setstate({ ...state, Password: e.target.value });
   };
-  let GetAllTrigger = () => {
-    axios
-      .get("http://localhost:3000/User/All", {
-        headers: {
-          "auth-token": store.store, //the token is a variable which holds the token
-        },
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // let GetAllTrigger = () => {
+  //   axios
+  //     .get("http://localhost:3000/User/All", {
+  //       headers: {
+  //         "auth-token": store.store, //the token is a variable which holds the token
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   useEffect(() => {
    console.log("useeffect auth",isAuthenticated);
@@ -96,16 +121,16 @@ function Login({dispatch_Users,isAuthenticated}) {
           autoDismiss: true,
         })
       }
-      if(!isAuthenticated && Authstate.error){
+      // if(!isAuthenticated && Authstate.error){
 
       
-        addToast(`${Authstate.error}`, {
-              appearance: 'error',
-              autoDismiss: true,
-            })
-            setstate({  ...state,Email: "", Password: "" })
+      //   addToast(`${Authstate.error}`, {
+      //         appearance: 'error',
+      //         autoDismiss: true,
+      //       })
+      //       setstate({  ...state,Email: "", Password: "" })
           
-      }
+      // }
         //  if(Authstate.error !=""){
         //   addToast(`${Authstate.error}`, {
         //     appearance: 'error',
@@ -223,7 +248,9 @@ function Login({dispatch_Users,isAuthenticated}) {
   }
   
   const mapDispatchToProps =(dispatch)=>{
-    return{ dispatch_Users: (Data)=> dispatch(PostLogin(Data))
+    return{ dispatch_Users: (Data)=> dispatch(PostLogin(Data)),
+      PostSuccess: (info,id)=> dispatch(postsuccess(info,id)),
+      PostFailed: (error)=> dispatch(postfailed(error))
     }
   }
 export default connect(mapStateToProps,mapDispatchToProps)(Login);

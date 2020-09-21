@@ -348,10 +348,10 @@ router.put('/UpdateProduct/:id', multer({
 
           product.save(function (err) {
             if (err) {
-              if (err.errors) {
+              if (err) {
                 res.json({
                   success: false,
-                  message: 'Please ensure form is filled out properly'
+                  message: err
                 });
               } else {
                 res.json({

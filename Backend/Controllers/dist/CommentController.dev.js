@@ -28,7 +28,7 @@ router.get("/list", function _callee(req, res) {
           Comment.find(function (err, docs) {
             if (!err) {
               res.json({
-                success: false,
+                success: true,
                 data: docs
               }); // Return error message
             } else {

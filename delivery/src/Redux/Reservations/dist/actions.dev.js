@@ -32,7 +32,11 @@ exports.Fetch_Reservation_fail = Fetch_Reservation_fail;
 
 var FetchReservation = function FetchReservation() {
   return function (dispatch) {
-    _axios["default"].get("http://localhost:3000/Reservation/All").then(function (res) {
+    _axios["default"].get("http://localhost:3000/Reservation/All", {
+      headers: {
+        "authtoken": token
+      }
+    }).then(function (res) {
       var AllReservations = res.data;
       dispatch(Fetch_Reservation_success(AllReservations));
     })["catch"](function (error) {
@@ -55,7 +59,11 @@ exports.refreshStore_Reservation = refreshStore_Reservation;
 
 var RefreshStoreRes = function RefreshStoreRes() {
   return function (dispatch) {
-    _axios["default"].get("http://localhost:3000/Reservation/All").then(function (res) {
+    _axios["default"].get("http://localhost:3000/Reservation/All", {
+      headers: {
+        "authtoken": token
+      }
+    }).then(function (res) {
       console.log("Log in Data is here", res);
       var AllReservations = res.data;
       dispatch(refreshStore_Reservation(AllReservations));

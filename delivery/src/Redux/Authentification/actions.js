@@ -4,6 +4,7 @@ import { VALUE } from "./types";
 import { FETCH_REQUEST, FETCH_SUCCESS, FETCH_FAILED } from "./types";
 import axios from 'axios';
 import { useHistory } from "react-router-dom";
+const token = localStorage.getItem("token");
 
 export const login = () => {
   return {
@@ -52,11 +53,12 @@ export const postrequest = () => {
   };
 };
 
-export const postsuccess = (status,userId) => {
+export const postsuccess = (status,userId,role) => {
   return {
     type: POSTSUCCESS,
     payload: status,
-    userId:userId
+    userId:userId,
+    role:role
     
   };
 };
@@ -97,30 +99,33 @@ export const refreshStore = () => {
 
 
 
-export const FetchUsers = () => {
-  return (dispatch) => {
-    dispatch(FetchRequest());
-    axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
-      const users = response.data;
-      dispatch(FetchSuccess(response.data.status));
-    }).catch(error=>{
-        const errorMsg = error.message;
-        dispatch(FetchFailed(errorMsg));
-    });
+// export const FetchUsers = () => {
+//   return (dispatch) => {
+//     dispatch(FetchRequest());
+//     axios.get("https://jsonplaceholder.typicode.com/users").then((response) => {
+//       const users = response.data;
+//       dispatch(FetchSuccess(response.data.status));
+//     }).catch(error=>{
+//         const errorMsg = error.message;
+//         dispatch(FetchFailed(errorMsg));
+//     });
 
-  };
-};
+//   };
+// };
 
 
 export const PostLogin =  (Data) => {
   return (dispatch) => {
-    axios.post("http://localhost:3000/Sign/SignIn",Data).then((response) => {
+    axios.post("http://localhost:3000/Sign/SignIn",Data,{
+      headers: {
+        "authtoken": token
+      }}).then((response) => {
       const info = response.data
       console.log("infos are ",info);
       if (response.data.status=="POST SUCCEEDED")
       { localStorage.setItem("token",response.data.token);}
        response.data.status=="POST SUCCEEDED" ? 
-         dispatch(postsuccess(info,response.userId)) : dispatch(postfailed(response.data.error))
+         dispatch(postsuccess(info,response.userId,response.role)) : dispatch(postfailed(response.data.error))
        
     }).catch(error=>{
         const errorMsg = error.message;
@@ -131,24 +136,24 @@ export const PostLogin =  (Data) => {
 };
 
 
-export const Postlogup =  (Data) => {
-  return (dispatch) => {
-    axios.post("http://localhost:3000/Sign/SignUp",Data).then((response) => {
-      const info = response.data
-      console.log("Logup infos are ",info);
+// export const Postlogup =  (Data) => {
+//   return (dispatch) => {
+//     axios.post("http://localhost:3000/Sign/SignUp",Data).then((response) => {
+//       const info = response.data
+//       console.log("Logup infos are ",info);
      
-       if(response.data.hasOwnProperty("success")) {
-         dispatch(post_logup_success(info))
-         }else{
-           dispatch(post_logup_failed(response.data.error))
-         }
-    }).catch(error=>{
-        const errorMsg = error.message;
-        dispatch(post_logup_failed(errorMsg));
-    });
+//        if(response.data.hasOwnProperty("success")) {
+//          dispatch(post_logup_success(info))
+//          }else{
+//            dispatch(post_logup_failed(response.data.error))
+//          }
+//     }).catch(error=>{
+//         const errorMsg = error.message;
+//         dispatch(post_logup_failed(errorMsg));
+//     });
 
-  };
-};
+//   };
+// };
  
  
 // Authentication Actions :

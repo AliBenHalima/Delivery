@@ -7,7 +7,8 @@ import { Button, Modal,Image,Card,Form } from 'react-bootstrap';
 
 const UsersTable =(props)=>{
  const [Number, setNumber] = useState(0)
- 
+ const token = localStorage.getItem("token");
+
     const [state, setstate] = useState({
       name: props.data.name,
       price: props.data.price,
@@ -69,7 +70,10 @@ const UsersTable =(props)=>{
     const Sumbithandle = (e) => {
           // setcheck(!check)
           console.log(Data,"is data");
-          axios.put("http://localhost:3000/Product/UpdateProduct/"+ props.data._id,Data).then((response) => {
+          axios.put("http://localhost:3000/Product/UpdateProduct/"+ props.data._id,Data,{
+            headers: {
+              "authtoken": token
+            }}).then((response) => {
               const info = response
         console.log("UPDATED DATA IS  ",info);
         // props.dispatch_Products_();
@@ -86,7 +90,10 @@ const UsersTable =(props)=>{
     const DeleteProduct=(e,user)=>{
       let r = window.confirm("Do you want to delete this Product ?");
       if (r == true) {
-      axios.delete("http://localhost:3000/User/Delete/"+user).then(res=>{
+      axios.delete("http://localhost:3000/User/Delete/"+user,{
+        headers: {
+          "authtoken": token
+        }}).then(res=>{
         props.Refresh();
         setNumber(1)
       }).catch(err=>{
@@ -104,7 +111,7 @@ const UsersTable =(props)=>{
         <td>{props.data.Email} $</td>
         <td>{props.data.Address} </td>
         <td>{props.data.Phonenumber} </td>
-        <td>{Number} </td>
+        <td>{props.data.role} </td>
         {/* <td>{props.data.Promotion} </td> */}
         <td><i onClick={(e)=>DeleteProduct(e,props.data._id)} class="fas fa-trash hoverClass"></i></td>
         

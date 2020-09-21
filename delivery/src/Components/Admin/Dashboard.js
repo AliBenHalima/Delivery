@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 
 function Dashboard(props) {
+  const token = localStorage.getItem("token");
 
   const Products = useSelector(state => state.FetchProd.products);
   const [Toggle, setToggle] = useState("")
@@ -61,7 +62,10 @@ function Dashboard(props) {
   
 
     const SumbithandleAdd = (e) => {
-      axios.post("http://localhost:3000/Product/AddProductTest",Data2).then((response) => {
+      axios.post("http://localhost:3000/Product/AddProductTest",Data2,{
+        headers: {
+          "authtoken": token
+        }}).then((response) => {
         console.log("Adding Product",response);
        window.alert(response.data)
        props.dispatch_Products();
@@ -77,7 +81,10 @@ function Dashboard(props) {
 
 useEffect(()=>{
   props.dispatch_Products_();
-  axios.get("http://localhost:3000/User/All").then((response) => {
+  axios.get("http://localhost:3000/User/All",{
+    headers: {
+      "authtoken": token
+    }}).then((response) => {
     setUsers(response.data);
     console.log(response);
  
@@ -87,7 +94,10 @@ console.log("Users",response);
   console.log("error for adding product",err)
 })
 
-  axios.get("http://localhost:3000/Category/All").then((res) => {
+  axios.get("http://localhost:3000/Category/All",{
+    headers: {
+      "authtoken": token
+    }}).then((res) => {
     setCategoryList(res.data)
   console.log("CategoryList",res);
 }).catch(error=>{
@@ -102,7 +112,7 @@ console.log(error)
     return (
         <div>
             <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+      <a className="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Live Dinner </a>
       <input required className="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" />
       <ul className="navbar-nav px-3">
         <li className="nav-item text-nowrap">
@@ -140,57 +150,7 @@ console.log(error)
                 </a>
                 </Link>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="users"></span>
-                  Customers
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span>
-                  Reports
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="layers"></span>
-                  Integrations
-                </a>
-              </li>
-            </ul>
-
-            <h6 className="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-              <span>Saved reports</span>
-              <a className="d-flex align-items-center text-muted" href="#">
-                <span data-feather="plus-circle"></span>
-              </a>
-            </h6>
-            <ul className="nav flex-column mb-2">
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Current month
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Last quarter
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Social engagement
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  <span data-feather="file-text"></span>
-                  Year-end sale
-                </a>
-              </li>
+             
             </ul>
           </div>
         </nav>

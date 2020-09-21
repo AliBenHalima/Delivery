@@ -26,6 +26,11 @@ var CommentController = require('./Controllers/CommentController');
 
 var CategoryController = require('./Controllers/CategoryController');
 
+var _require = require("./Controllers/Auth"),
+    isAuth4Reservation = _require.isAuth4Reservation,
+    isAuth4Product = _require.isAuth4Product,
+    isAuth4User = _require.isAuth4User;
+
 app.use(cors());
 var corsOptions = {
   origin: '*',

@@ -6,10 +6,10 @@ export const Fetch_Comments_Request = () => {
   };
 };
 
-export const Fetch_Comments_Success = (users) => {
+export const Fetch_Comments_Success = (comments) => {
   return {
     type: FETCH_COMMENT_SUCCESS,
-    payload: users,
+    payload: comments,
   };
 };
 
@@ -24,6 +24,7 @@ export const FetchComments = () => {
     // dispatch(Fetch_Comments_Request());
     axios.get("http://localhost:3000/Comment/list").then((response) => {
       const users = response.data;
+      console.log("Commmmmmmment",users)
       dispatch(Fetch_Comments_Success(response.data));
     }).catch(error=>{
         const errorMsg = error.message;

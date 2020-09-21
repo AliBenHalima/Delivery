@@ -27,6 +27,7 @@ router.post("/SignUp",(req,res,next)=>{
                                 Password:hashedPwd,
                                 Address:req.body.Address,
                                 Phonenumber:req.body.Phonenumber,
+                                role:"Admin",
                               
                             });
                             user
@@ -39,7 +40,7 @@ router.post("/SignUp",(req,res,next)=>{
     
         }
         else if (!req.body.Email&&!req.body.Password&&!req.body.Username)
-        res.json({error:'Email & Password & Username are required'});
+        res.json({error:'Please Fill in the fields'});
         else if (!req.body.Username)
         res.json({error:'Please enter the username'});
         else if(!req.body.Email)
@@ -64,10 +65,10 @@ router.post("/SignIn",(req,res,next)=>
                 if(bool)
                 {
                     console.log('logged in',user._id);
-                    const token = jwt.sign({email:req.body.email,userId:user._id},"my-secret-token");
+                    const token = jwt.sign({email:req.body.email,userId:user._id,role:user.role},"my-secret-token");
 
                     console.log(token);
-                   res.header("authtoken",token).send({token:token,status:"POST SUCCEEDED",userId:user._id,username:user.Username});
+                   res.header("authtoken",token).send({token:token,status:"POST SUCCEEDED",userId:user._id,username:user.Username,role:user.role});
 
                     // res.json({token:token,status:"all good"});
                     // res.json();
@@ -75,7 +76,7 @@ router.post("/SignIn",(req,res,next)=>
                 else
                 {
                     console.log('no match');
-                    res.json({error:'wrong password'});
+                    res.json({status:'wrong password'});
                 }
                })
                .catch(err=>
@@ -84,15 +85,15 @@ router.post("/SignIn",(req,res,next)=>
                 });
             }
             else
-              res.json({error:'The email and password you entred did not match our records'});
+              res.json({status:'The email and password you entred did not match our records'});
         });
     }
     else if (!req.body.Email&&!req.body.Password)
-      res.json({error:'Email & Password are required'});
+      res.json({status:'Email & Password are required'});
     else if(!req.body.Email)
-      res.json({error:'Please enter your Email'});
+      res.json({status:'Please enter your Email'});
     else
-      res.json({error:'Please enter Your Password'});
+      res.json({status:'Please enter Your Password'});
 }),(err)=>{ console.log(err)}
 
 

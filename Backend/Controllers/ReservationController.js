@@ -5,9 +5,10 @@ const UserModel = require("../Models/User");
 const auth = require("../Routes/authentification");
 const ReservationModel = require("../Models/Reservation");
 const jwt = require('jsonwebtoken');
+const { isAuth4Reservation } = require("./Auth");
 
 
-router.get("/All",(req,res)=>{
+router.get("/All",isAuth4Reservation,(req,res)=>{
     ReservationModel.find((err,documents)=>{
         if(!err){
             res.send( documents)
@@ -60,7 +61,7 @@ router.post('/AddReservation',(req,res)=>{
       });})
 
       
-      router.delete('/Delete/:id',async (req,res)=>{
+      router.delete('/Delete/:id',isAuth4Reservation, async (req,res)=>{
         ReservationModel.findById(req.params.id).then((product) => {
           product.remove((err) => {
             if (err) {
@@ -78,7 +79,7 @@ router.post('/AddReservation',(req,res)=>{
 
 
 
-          router.put('/UpdateReservation/:id',(req, res) => {
+          router.put('/UpdateReservation/:id',isAuth4Reservation,(req, res) => {
       
             // Check if id was provided
             if (!req.params.id) {

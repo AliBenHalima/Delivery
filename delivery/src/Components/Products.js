@@ -20,7 +20,7 @@ import { useToasts } from 'react-toast-notifications'
     
 
 function Products({dispatch_PostProducts,dispatch_Cart,...props}) {
-
+const [categoryName, setcategoryName] = useState("")
   const { addToast } = useToasts()
   const [state, setstate] = useState({Email:"",PhoneNumber:null,Address:"",ResevedFor:"",Product:"",LOGIN_Email:"",LOGIN_Password:"",Comment:""});
   let productsList =useSelector(state=>state.FetchProd.products);
@@ -210,33 +210,33 @@ const ProductId={
 
 
 const ToggleLike_Dislike=()=>{
-  props.dispatch_Likes_Dislikes(ProductId)
-  if(AuthState.authenticated){
-    console.log("ttttttttttttttttt")
-  productsList.map((element)=>{
-    // debugger;
-    if(element._id==ProductId){
-      if(element.likedBy.includes(AuthState.status.userId)){
-       window.alert("rgzeg")
-        addToast("You Disliked this product", {
-          appearance: 'success',
-          autoDismiss: true,
-        }) 
-      }
-      else{
-        addToast("You Liked this product", {
-          appearance: 'info',
-          autoDismiss: true,
-        })
-    }
-  }
-})
+  
+  if(!AuthState.authenticated){
+    addToast("you must login first", {
+      appearance: 'info',
+      autoDismiss: true,
+    })
+//   productsList.map((element)=>{
+   
+//     if(element._id==ProductId){
+//       if(element.likedBy.includes(AuthState.status.userId)){
+//        window.alert("rgzeg")
+//         addToast("You Disliked this product", {
+//           appearance: 'success',
+//           autoDismiss: true,
+//         }) 
+//       }
+//       else{
+//         addToast("You Liked this product", {
+//           appearance: 'info',
+//           autoDismiss: true,
+//         })
+//     }
+//   }
+// })
 
 }
-else { addToast("You must log in first...", {
-  appearance: 'info',
-  autoDismiss: true,
-})}
+props.dispatch_Likes_Dislikes(ProductId)
 }
 const ToggleHeart=()=>{
   let check=false;
@@ -262,16 +262,16 @@ else{
  
   return (null)
 }
-// useEffect(() => {
-//   if(ReservationStatus==="POST Products SUCCEEDED"){
-//   addToast("Resvation has been made", {
-//     appearance: 'success',
-//     autoDismiss: true,
-//   });
-//   }
-
-
-// }, [])
+useEffect(() => {
+  	axios
+      .get(" http://localhost:3000/Category/"+props.data.category)
+      .then((res) => {
+		setcategoryName(res.data.name)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [])
 
 // useEffect(() => {
 //       if(AuthState.authenticated){
@@ -316,7 +316,7 @@ else{
                         <i class="far fa-heart hoverClass" disabled={!isAuthenticated} onClick={ToggleLike_Dislike}></i> */}
                         <i class="fas fa-eye hoverClass"  onClick={handleShowDescription} ></i>           
                         </div>
-                          <p>{props.data.category}</p>
+                          <p>{categoryName}</p>
                           <h5> ${props.data.price}</h5>
                           {/* <p><button class="btn btn-lg btn-circle btn-outline-new-white" onClick={Test} href="" disabled={!isAuthenticated}>Add</button></p> */}
                           {/* <p><button onClick={()=>affectProducts()} data-toggle="modal" data-target={"#exampleModal"+props.index} className="btn btn-lg btn-circle btn-outline-new-white"  disabled={!isAuthenticated}>Order Now!</button></p>    */}
@@ -453,7 +453,7 @@ size="lg"
           </div>
           <div className="col-md-8">
          <h1>{props.data.name}</h1>
-       <p>  {props.data.category}</p>
+       <p>  {categoryName}</p>
       <p>   {props.data.price}</p>
         <p> {props.data.CookingTime}</p>
         

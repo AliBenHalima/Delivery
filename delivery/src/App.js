@@ -43,7 +43,7 @@ console.log("history",history)
 function App({isAuthenticated,dispatch_Products}) {
   
   dispatch_Products();
-
+const role = useSelector(state => state.postRed.status.role)
 
   // RXJS shit 
   let tokenExists="nodata";
@@ -104,7 +104,7 @@ const token = localStorage.getItem('token');
           }} />
 
           <Route path="/SignUp" component={()=>(
-            isAuthenticated ? <Redirect to='/Home' /> : <SignUp /> )}>   
+            isAuthenticated ? <Redirect to='/Home' /> : <Redirect to='/SignUp' /> )}>   
           </Route>
 
           <Route path="/test" >
@@ -112,13 +112,13 @@ const token = localStorage.getItem('token');
             </Route>
 
           <Route path="/Reservation" component={()=>(
-            isAuthenticated ? <Reservation />:  <Login /> 
+            isAuthenticated ? <Reservation />:  <Redirect to='/Login' />
           )}>
               </Route>
           <Route path="/Menu" component={Menu} />
           {/* <Route path="/Admin" component={Admin} /> */}
           <Route path="/Admin" component={()=>(
-            isAuthenticated ? <Admin_ />:  <Login /> 
+            isAuthenticated ? <Admin_ />:  <Redirect to='/Login' />
           )}>
           </Route>
           <Route path="/Contact" component={Contact} />
@@ -129,7 +129,12 @@ const token = localStorage.getItem('token');
         <Route path="/TestToDelete"  component={TestToDelete} />
           {/* <Route path="/About" component={About} /> */}
           <Route path="/CartAttente" component={AttenteCart} />
-          <Route path="/Dashboard" component={Dashboard} />
+
+          <Route path="/Dashboard" component={()=>(
+            isAuthenticated && role=="Admin" ? <Dashboard/>: <Redirect to='/Home' />
+          )}>
+            </Route>
+
           <Route path="/DashboardUsers" component={DashboardUsers} />
           <Route path="/DashboardReservation" component={DashboardReservation} />
 

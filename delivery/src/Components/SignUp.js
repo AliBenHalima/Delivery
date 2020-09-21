@@ -9,11 +9,16 @@ import { Postlogup } from '../Redux/Authentification/actions';
 import { map, startWith } from "rxjs/operators";
 import { of } from "rxjs";
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
-import { PostLogin } from "../Redux/Authentification/actions";
+import { PostLogin, post_logup_success,post_logup_failed } from "../Redux/Authentification/actions";
 import { store } from "../Redux/store";
+import { useToasts } from 'react-toast-notifications'
 
 
-function SignUp({logupState, dispatch_Users}) {
+
+
+
+function SignUp({logupState,...props}) {
+  const { addToast } = useToasts()
 
     const [state, setstate] = useState({Username:"",Email:"",Password:"",Address:"",Phonenumber:0});
     const [store, setstore] = useState({store:"",login:false,user:{}});
@@ -28,13 +33,45 @@ function SignUp({logupState, dispatch_Users}) {
   }
 
     const Sumbithandle=(e)=>{
-      dispatch_Users(Data);
+      // dispatch_Users(Data);
+
+      // addToast( logupState.status, {
+      //   appearance: 'error',
+      //   autoDismiss: true,
+      // })
+    
+      axios.post("http://localhost:3000/Sign/SignUp",Data).then((response) => {
+        const info = response.data
+        console.log("Logup infos are ",info);
+       
+         if(response.data.hasOwnProperty("success")) {
+          props.dispatchSuccess(info)
+          addToast( "Sign up succeeded", {
+              appearance: 'success',
+              autoDismiss: true,
+            })
+            history.push('/Home');
+           }else{
+            props.dispatchFail(response.data.error)
+             addToast( response.data.error, {
+              appearance: 'error',
+              autoDismiss: true,
+            })
+           }
+      }).catch(error=>{
+          const errorMsg = error.message;
+          props.dispatchFail(errorMsg);
+          addToast( errorMsg, {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+      });
       // history.push('/Home');      
         e.preventDefault(); 
     } 
     useEffect(() => {
    console.log("logupState",logupState);
-   logupState.isLoggedUp ? history.push('/Home') : history.push('/SignUp');
+  //  logupState.isLoggedUp ? history.push('/Home') : history.push('/SignUp');
     })
 //       useEffect(() => {
 //         axios.get("http://localhost:3000/User/All").then((response) => {
@@ -153,15 +190,15 @@ function SignUp({logupState, dispatch_Users}) {
 									<div className="col-md-12">
 <div className="form-group">
     <label for="ExampleUsername">Username</label>
-    <input className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleUsername(e)} className="form-control" id="ExampleUsername" placeholder="Username" />
+    <input  className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleUsername(e)} className="form-control" id="ExampleUsername" placeholder="Username" />
   </div>
   <div className="form-group">
     <label for="exampleInputEmail1">Email address</label>
-    <input className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleEmail(e)} value={state.Email}   className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+    <input  className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleEmail(e)} value={state.Email}   className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
   </div>
   <div className="form-group">
     <label for="exampleInputPassword1">Password</label>
-    <input className="datepicker picker__input form-control widthclass" type="password"  onChange={(e)=>ChangeHandlePassword(e)} className="form-control" id="exampleInputPassword1" placeholder="Password" />
+    <input   className="datepicker picker__input form-control widthclass" type="password"  onChange={(e)=>ChangeHandlePassword(e)} className="form-control" id="exampleInputPassword1" placeholder="Password" />
   </div>
   
   {/* <div className="form-group">
@@ -188,12 +225,12 @@ function SignUp({logupState, dispatch_Users}) {
       <div className="col-md-12">
       <div className="form-group">
     <label for="exampleInputAddress">Address</label>
-    <input className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleAddress(e)} className="form-control" id="exampleInputAddress" placeholder="Address" />
+    <input   className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleAddress(e)} className="form-control" id="exampleInputAddress" placeholder="Address" />
   </div>
 
   <div className="form-group">
     <label for="exampleInputPhone">Phone Number</label>
-    <input className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandlePhone(e)} className="form-control" id="exampleInputPhone" placeholder="Phone Number" />
+    <input  className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandlePhone(e)} className="form-control" id="exampleInputPhone" placeholder="Phone Number" />
   </div>
  
 </div>
@@ -226,7 +263,11 @@ const mapStateToProps=(state)=>{
 }
 
 const mapDispatchToProps =(dispatch)=>{
-  return{ dispatch_Users: (Data)=> dispatch(Postlogup(Data))
+  return{
+    //  dispatch_Users: (Data)=> dispatch(Postlogup(Data)),
+    dispatchSuccess : (info)=>post_logup_success(info),
+    dispatchFail : (errorMsg)=>post_logup_failed(errorMsg),
   }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(SignUp);
+

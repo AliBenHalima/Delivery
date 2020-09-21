@@ -24,6 +24,7 @@ const CommmentsState = {
 export const FetchComments_Red=(state=CommmentsState,Action)=>{
   switch (Action.type) {
       case FETCH_COMMENT_SUCCESS:
+        // console.log("Action.pay", Action.payload)
           return {
               ...state,Comments : Action.payload, status:"success"
           }

@@ -11,6 +11,8 @@ import { useToasts } from 'react-toast-notifications'
 
  
 const ReservationTable =(props)=>{
+  const token = localStorage.getItem("token");
+
   const { addToast } = useToasts()
  const [CategoryList, setCategoryList] = useState([])
  const [ProductFile, setProductFile] = useState("")
@@ -76,7 +78,10 @@ const ReservationTable =(props)=>{
   
     const SumbitReservation = (e) => {
       console.log("Stateeeeeeeeeee",state.State);
-          axios.put("http://localhost:3000/Reservation/UpdateReservation/"+ props.data._id,Data).then((response) => {
+          axios.put("http://localhost:3000/Reservation/UpdateReservation/"+ props.data._id,Data,{
+            headers: {
+              "authtoken": token
+            }}).then((response) => {
               const info = response
         console.log("receved ",info);
         // props.dispatch_Products_();
@@ -93,7 +98,10 @@ const ReservationTable =(props)=>{
     const DeleteRseservation=(e,reservationId)=>{
       let r = window.confirm("Do you want to delete this Reservation ?");
       if (r == true) {
-      axios.delete("http://localhost:3000/Reservation/Delete/"+reservationId).then(res=>{
+      axios.delete("http://localhost:3000/Reservation/Delete/"+reservationId,{
+        headers: {
+          "authtoken": token
+        }}).then(res=>{
         addToast(res.data.message, {
           appearance: 'success',
           autoDismiss: true,
@@ -107,7 +115,10 @@ const ReservationTable =(props)=>{
     useEffect(() => {
 
 
-    axios.get("http://localhost:3000/Product/"+props.data.ForProduct).then((res) => {
+    axios.get("http://localhost:3000/Product/"+props.data.ForProduct,{
+      headers: {
+        "authtoken": token
+      }}).then((res) => {
       setProductFile(res.data.file);
       console.log("pppp",res)
   }).catch(error=>{

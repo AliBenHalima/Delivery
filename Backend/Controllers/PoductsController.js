@@ -1,12 +1,14 @@
-
 const  express = require("express");
 const router = express.Router();
 const UserModel = require("../Models/User");
 const auth = require("../Routes/authentification");
 const ProductsModel = require("../Models/Products");
 const jwt = require('jsonwebtoken');
+const { isAuth4Product } = require("./Auth");
+
 
 var multer  = require('multer');
+
 // var upload = multer({ dest: './images' })
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
@@ -81,7 +83,7 @@ router.post('/AddProduct',async (req,res)=>{
         }
       });})
 
-      router.delete('/Delete/:id',async (req,res)=>{
+      router.delete('/Delete/:id',isAuth4Product,async (req,res)=>{
         ProductsModel.findById(req.params.id).then((product) => {
           product.remove((err) => {
             if (err) {
@@ -220,7 +222,7 @@ router.post('/AddProduct',async (req,res)=>{
 
 
 
-          router.put('/UpdateProduct/:id',multer({storage: storage}).single("file"),(req, res) => {
+          router.put('/UpdateProduct/:id',isAuth4Product,multer({storage: storage}).single("file"),(req, res) => {
             let url = req.protocol + "://" + req.get("host");
             // Check if id was provided
             if (!req.params.id) {
@@ -246,8 +248,8 @@ router.post('/AddProduct',async (req,res)=>{
 
                      product.save((err) => {
                       if (err) {
-                        if (err.errors) {
-                          res.json({ success: false, message: 'Please ensure form is filled out properly' });
+                        if (err) {
+                          res.json({ success: false, message: err });
                         } else {
                           res.json({ success: false, message: err }); // Return error message
                         }
@@ -260,23 +262,5 @@ router.post('/AddProduct',async (req,res)=>{
           });
         } });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
       module.exports=router;

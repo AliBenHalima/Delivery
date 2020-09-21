@@ -13,6 +13,7 @@ const ReservationController=require('./Controllers/ReservationController');
 const MailController=require('./Controllers/MailController');
 const CommentController=require('./Controllers/CommentController');
 const CategoryController=require('./Controllers/CategoryController');
+const { isAuth4Reservation, isAuth4Product, isAuth4User } = require("./Controllers/Auth");
 
 
 app.use(cors());

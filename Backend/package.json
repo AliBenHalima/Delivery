@@ -17,6 +17,7 @@
     "mongoose": "^5.9.25",
     "multer": "^1.4.2",
     "nodemailer": "^6.4.11",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "role-acl": "^4.5.4"
   }
 }

@@ -15,10 +15,11 @@ import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import { useToasts } from 'react-toast-notifications'
 
 
-
 function Header({dispatch_SignOut,dispatch_Refresh,CartNumber,isAuthenticated,dispatch_Delete,dispatch_Products,dispatch_Delete_attente}) {
 	const { addToast } = useToasts()
 const [state, setstate] = useState({isAuthenticated:false});
+const role = useSelector(state => state.postRed.status.role)
+
 const [element, setelement] = useState({elements:[]});
 const AttenteNumber = useSelector(state => state.Attente.BasketNumber)
 useEffect(() => {
@@ -69,7 +70,7 @@ if(!isAuthenticated){
 	return <Link to="/SignUp">	<li className="nav-item"><a className="nav-link" >SignUp</a></li></Link>
 }return (null); }
 const AdminCheck =()=>{
-	if(isAuthenticated){
+	if(isAuthenticated && role=="Admin"){
 		return 	<Link to="/Dashboard">	<li className="nav-item"><a className="nav-link" >Dashboard</a></li></Link>
 	}return (null); }
 

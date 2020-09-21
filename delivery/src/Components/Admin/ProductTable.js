@@ -7,7 +7,8 @@ import { Button, Modal,Image,Card,Form } from 'react-bootstrap';
 import Opt from '../Opt';
 
 const ProductTable =(props)=>{
-  
+  const token = localStorage.getItem("token");
+
  const [CategoryList, setCategoryList] = useState([])
  const [CategoryName, setCategoryName] = useState("")
 
@@ -73,7 +74,10 @@ const ProductTable =(props)=>{
     const Sumbithandle = (e) => {
           // setcheck(!check)
           console.log(Data,"is data");
-          axios.put("http://localhost:3000/Product/UpdateProduct/"+ props.data._id,Data).then((response) => {
+          axios.put("http://localhost:3000/Product/UpdateProduct/"+ props.data._id,Data,{
+            headers: {
+              "authtoken": token
+            }}).then((response) => {
               const info = response
         console.log("UPDATED DATA IS  ",info);
         // props.dispatch_Products_();
@@ -90,7 +94,10 @@ const ProductTable =(props)=>{
     const DeleteProduct=(e,product)=>{
       let r = window.confirm("Do you want to delete this Product ?");
       if (r == true) {
-      axios.delete("http://localhost:3000/Product/Delete/"+product).then(res=>{
+      axios.delete("http://localhost:3000/Product/Delete/"+product,{
+        headers: {
+          "authtoken": token
+        }}).then(res=>{
         props.Refresh();
       }).catch(err=>{
         window.alert(err)
@@ -105,7 +112,10 @@ const ProductTable =(props)=>{
     console.log(error)
     });   
 
-    axios.get("http://localhost:3000/Category/"+props.data.category).then((res) => {
+    axios.get("http://localhost:3000/Category/"+props.data.category,{
+      headers: {
+        "authtoken": token
+      }}).then((res) => {
       setCategoryName(res.data.name);
       props.Refresh();
   }).catch(error=>{

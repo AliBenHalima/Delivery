@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { FETCH_RESERVATIONS_FAILED, FETCH_RESERVATIONS_SUCCESS,REFRESH_STORE_RES } from './types';
+const token = localStorage.getItem("token");
 
 
 
@@ -22,7 +23,10 @@ export const Fetch_Reservation_fail = (error) => {
 
 export const FetchReservation = () => {
     return (dispatch) => {
-        axios.get("http://localhost:3000/Reservation/All").then((res) => {
+        axios.get("http://localhost:3000/Reservation/All",{
+          headers: {
+            "authtoken": token
+          }}).then((res) => {
          
          const AllReservations = res.data;
         dispatch(Fetch_Reservation_success(AllReservations));
@@ -44,7 +48,10 @@ export const FetchReservation = () => {
 
   export const RefreshStoreRes = () => {
     return (dispatch) => {
-        axios.get("http://localhost:3000/Reservation/All").then((res) => {
+        axios.get("http://localhost:3000/Reservation/All",{
+          headers: {
+            "authtoken": token
+          }}).then((res) => {
           console.log("Log in Data is here", res);
            const AllReservations=res.data;
         dispatch(refreshStore_Reservation(AllReservations));
