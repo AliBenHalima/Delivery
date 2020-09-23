@@ -45,14 +45,13 @@ function Login({dispatch_Users,isAuthenticated,...props}) {
   const Sumbithandle = (e) => {
     console.log("isauthen 1st", isAuthenticated);
 
-    dispatch_Users(Data);
+    // dispatch_Users(Data);
     axios.post("http://localhost:3000/Sign/SignIn",Data).then((response) => {
       const info = response.data
       console.log("infos are ",info);
       if (response.data.status=="POST SUCCEEDED")
       { localStorage.setItem("token",response.data.token); 
-       props.PostSuccess(info,response.userId) 
-   
+       props.PostSuccess(info,response.userId,response.role) 
       }
        else{
         props.PostFailed(response.data.error)
@@ -114,7 +113,13 @@ function Login({dispatch_Users,isAuthenticated,...props}) {
 
   useEffect(() => {
    console.log("useeffect auth",isAuthenticated);
-   isAuthenticated ? history.push('/Home') : history.push('/Login')
+  if(isAuthenticated && Authstate.status.role=="Admin"){
+    history.push('/Dashboard')
+  } else if( isAuthenticated && Authstate.status.role=="User")
+    history.push('/Home')
+  else{
+    history.push('/Login')
+  }
    if(isAuthenticated){
     addToast(`Welcome ${username}`, {
           appearance: 'success',

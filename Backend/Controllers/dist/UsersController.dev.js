@@ -83,7 +83,7 @@ router.get("/:name", function _callee3(req, res) {
     }
   });
 });
-router["delete"]('/Delete/:id', function _callee4(req, res) {
+router["delete"]('/Delete/:id', isAuth4User, function _callee4(req, res) {
   return regeneratorRuntime.async(function _callee4$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {

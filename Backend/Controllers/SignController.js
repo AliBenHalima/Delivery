@@ -5,8 +5,11 @@ const UserModel = require("../Models/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const auth = require("../Routes/authentification");
+const nodemailer = require('nodemailer');
 
 router.post("/SignUp",(req,res,next)=>{
+    let users;
+    users = req.body;
     if(req.body.Email && req.body.Username && req.body.Password && req.body.Address && req.body.Phonenumber){
         UserModel.findOne({Email:req.body.Email})
             .then(user=>{
@@ -32,7 +35,20 @@ router.post("/SignUp",(req,res,next)=>{
                             });
                             user
                               .save()
-                              .then((user) => res.json({user:user,success:"Sign up Succeeded"}))
+                              .then(async (user) =>{ 
+                                // res.json({user:user,SignUpSucceed:"Sign up Succeeded"})
+      await sendMail(users, (info) => {
+        if(!users.Email || !users.Username ){
+          return res.send({success:false, status : " Verify your Credentials"});
+        }
+        
+          return res.send({success:true, status : " Mail sent successfully",data:info,user:user,SignUpSucceed:"Sign up Succeeded"});
+        
+  
+  })
+                            
+                            
+                            })
                               .catch( (err) => console.log(err) );
                         });
                 }
@@ -96,5 +112,42 @@ router.post("/SignIn",(req,res,next)=>
       res.json({status:'Please enter Your Password'});
 }),(err)=>{ console.log(err)}
 
+
+
+
+async function sendMail(users, callback) {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'alibenhalima60@gmail.com',
+        pass: 'belieber2020'
+      },
+      tls:{rejectUnauthorized : false}
+    });
+  
+    let mailOptions = {
+      from: '"Contacts Service" <alibenhalima60@gmail.com>', // sender address
+      to: users.Email, // list of receivers
+      subject: "Wellcome to Our Website ", // Subject line
+      html: `<h4>Hi ${users.Username} </h1><br>
+      <h4>Thanks for Joining ,Welcome to our restaurant</h4>`
+    };
+  
+    // send mail with defined transport object
+    let info = await transporter.sendMail(mailOptions,(error,infos)=>{
+      if(error){
+         console.log("Hello Ali"+ error)
+      }else{
+        console.log("information :" + infos)
+        res.send("Mail sent successfully")
+      }
+    });
+  
+    callback(info);
+  }
+  
 
 module.exports=router;

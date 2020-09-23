@@ -6,13 +6,18 @@ import { DECREMENT } from '../Redux/Cart/types'
 import Header from './Header';
 import { Link } from 'react-router-dom';
 import { useToasts } from 'react-toast-notifications'
+import axios from "axios";
+
 
 
 function Cart(props) {
+  const token = localStorage.getItem("token");
 
     const { addToast } = useToasts();
     const state = useSelector(state => state.ADDReducer)
     const [numberProd, setnumberProd] = useState({state:state})
+    // const [CategoryName, setCategoryName] = useState("")
+
     
     const Increment=(state,number)=>{
         props.dispatch_Increment(state,number);
@@ -74,13 +79,15 @@ if(check) {
             })
       }
     })
+    
   })
 
     return(
         <Fragment >
     <tr>
     <td><img src={props.data.file} className="rounded-top imageClassCart imageClassCart" /></td>
-    <td><strong> {props.data.name}</strong><p>{props.data.category}</p></td>
+    <td><strong> {props.data.name}</strong></td>
+    {/* <p>{CategoryName}</p> */}
     <td className="widthClass">
     {/* <form className="form-inline"> */}
       <div className="container">

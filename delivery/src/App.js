@@ -104,7 +104,7 @@ const token = localStorage.getItem('token');
           }} />
 
           <Route path="/SignUp" component={()=>(
-            isAuthenticated ? <Redirect to='/Home' /> : <Redirect to='/SignUp' /> )}>   
+            isAuthenticated ? <Redirect to='/Home' /> : <SignUp /> )}>   
           </Route>
 
           <Route path="/test" >
@@ -135,8 +135,15 @@ const token = localStorage.getItem('token');
           )}>
             </Route>
 
-          <Route path="/DashboardUsers" component={DashboardUsers} />
-          <Route path="/DashboardReservation" component={DashboardReservation} />
+            <Route path="/DashboardUsers" component={()=>(
+            isAuthenticated && role=="Admin" ? <DashboardUsers/>: <Redirect to='/Home' />
+          )}>
+            </Route>
+            <Route path="/DashboardReservation" component={()=>(
+            isAuthenticated && role=="Admin" ? <DashboardReservation/>: <Redirect to='/Home' />
+          )}>
+            </Route>
+          
 
           
           <Route path="/" component={Home} />

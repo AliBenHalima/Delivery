@@ -44,7 +44,7 @@ function SignUp({logupState,...props}) {
         const info = response.data
         console.log("Logup infos are ",info);
        
-         if(response.data.hasOwnProperty("success")) {
+         if(response.data.hasOwnProperty("SignUpSucceed")) {
           props.dispatchSuccess(info)
           addToast( "Sign up succeeded", {
               appearance: 'success',
@@ -194,7 +194,7 @@ function SignUp({logupState,...props}) {
   </div>
   <div className="form-group">
     <label for="exampleInputEmail1">Email address</label>
-    <input  className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandleEmail(e)} value={state.Email}   className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+    <input  className="datepicker picker__input form-control widthclass" type="email"  onChange={(e)=>ChangeHandleEmail(e)} value={state.Email}   className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
   </div>
   <div className="form-group">
     <label for="exampleInputPassword1">Password</label>
@@ -230,7 +230,7 @@ function SignUp({logupState,...props}) {
 
   <div className="form-group">
     <label for="exampleInputPhone">Phone Number</label>
-    <input  className="datepicker picker__input form-control widthclass" type="text"  onChange={(e)=>ChangeHandlePhone(e)} className="form-control" id="exampleInputPhone" placeholder="Phone Number" />
+    <input  className="datepicker picker__input form-control widthclass" type="Number"  onChange={(e)=>ChangeHandlePhone(e)} className="form-control" id="exampleInputPhone" placeholder="Phone Number" />
   </div>
  
 </div>

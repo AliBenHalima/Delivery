@@ -1,8 +1,73 @@
-import React, { Component } from 'react'
+import React, { useContext, useEffect, useState, Component } from "react";
+import { useHistory } from "react-router-dom";
 import Header from './Header'
+import axios from "axios";
+import { useToasts } from 'react-toast-notifications'
 
-export class Contact extends Component {
-    render() {
+
+    
+function Contact() {
+    const [state, setstate] = useState({ Username: "", Email: "",Message:"" });
+    let history = useHistory();
+    const { addToast } = useToasts();
+
+let Data={
+    Username:state.Username,
+    Email:state.Email,
+    Message:state.Message,
+
+}
+    const ChangeHandleUsername = (e) => {
+        setstate({ ...state, Username: e.target.value });
+      };
+
+    const ChangeHandleEmail = (e) => {
+        setstate({ ...state, Email: e.target.value });
+      };
+
+      const ChangeHandleMessage = (e) => {
+        setstate({ ...state, Message: e.target.value });
+      };
+
+      const Sumbithandle = (e) => {
+       
+        axios.post("http://localhost:3000/Mail/sendmail",Data).then((response) => {
+          const info = response.data
+          console.log("Mail data is ",info);
+          if (response.data.success){
+          addToast(response.data.status, {
+            appearance: 'success',
+            autoDismiss: true,
+          })
+          history.push('/Home')
+        }
+           else{
+            addToast(response.data.status, {
+              appearance: 'error',
+              autoDismiss: true,
+            })
+           }
+             
+            
+ 
+      
+ 
+      }).catch(error=>{
+        const errorMsg = error.message;
+        addToast(error.message, {
+          appearance: 'error',
+          autoDismiss: true,
+        })
+        
+    });
+    e.preventDefault();
+    }
+
+
+
+
+
+  
         return (
             <div>
  <Header />
@@ -24,46 +89,66 @@ export class Contact extends Component {
         <div className="col-lg-12">
             <div className="heading-title text-center">
                 <h2>Contact</h2>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting</p>
+                <p>If you need help Contact us </p>
             </div>
         </div>
     </div>
     <div className="row">
         <div className="col-lg-12">
-            <form id="contactForm">
+        <form onSubmit={(e) => Sumbithandle(e)}>
                 <div className="row">
                     <div className="col-md-12">
                         <div className="form-group">
-                            <input type="text" className="form-control" id="name" name="name" placeholder="Your Name" required data-error="Please enter your name" />
-                            <div className="help-block with-errors"></div>
+                        <input
+              type="text"
+              onChange={(e) => ChangeHandleUsername(e)}
+              value={state.Username}
+              className="datepicker picker__input form-control "
+              id="exampleInputUsername"
+              aria-describedby="emailHelp"
+              placeholder="Enter Username"
+              required
+            />           
+            <div className="help-block with-errors"></div>
                         </div>                                 
                     </div>
                     <div className="col-md-12">
                         <div className="form-group">
-                            <input type="text" placeholder="Your Email" id="email" className="form-control" name="name" required data-error="Please enter your email" />
-                            <div className="help-block with-errors"></div>
+                        <input
+              type="email"
+              onChange={(e) => ChangeHandleEmail(e)}
+              value={state.Email}
+              className="datepicker picker__input form-control "
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Enter email"
+              required
+            />                            <div className="help-block with-errors"></div>
                         </div> 
                     </div>
-                    <div className="col-md-12">
-                        <div className="form-group">
-                            <select className="custom-select d-block form-control" id="guest" required data-error="Please Select Person">
-                              <option disabled selected>Please Select Person*</option>
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                            </select>
-                            <div className="help-block with-errors"></div>
-                        </div> 
-                    </div>
+                   
                     <div className="col-md-12">
                         <div className="form-group"> 
-                            <textarea className="form-control" id="message" placeholder="Your Message" rows="4" data-error="Write your message" required></textarea>
-                            <div className="help-block with-errors"></div>
+                        <textarea
+              rows="6"
+               cols="10"
+              type="text"
+              onChange={(e) => ChangeHandleMessage(e)}
+              value={state.Message}
+              className="datepicker picker__input form-control "
+              id="exampleInputMessage"
+              aria-describedby="emailHelp"
+              placeholder="Enter Message"
+              required
+            />                                       <div className="help-block with-errors"></div>
                         </div>
-                        <div className="submit-button text-center">
-                            <button className="btn btn-common" id="submit" type="submit">Send Message</button>
+                        <div class="submit-button text-center">
+            <button
+              type="submit"
+              className="btn btn-common disabled"
+            >
+              Submit
+            </button>
                             <div id="msgSubmit" className="h3 text-center hidden"></div> 
                             <div className="clearfix"></div> 
                         </div>
@@ -164,7 +249,7 @@ export class Contact extends Component {
 
             </div>
         )
-    }
+    
 }
 
 export default Contact
