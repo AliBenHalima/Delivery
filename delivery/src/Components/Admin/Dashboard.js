@@ -69,7 +69,7 @@ function Dashboard(props) {
           "authtoken": token
         }}).then((response) => {
         console.log("Adding Product",response);
-       window.alert(response.data)
+     
        props.dispatch_Products();
        setAddstate({})
     }).catch(err=>{

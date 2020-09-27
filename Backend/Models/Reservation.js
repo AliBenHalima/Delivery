@@ -4,7 +4,7 @@ const ReservationSchema=new mongoose.Schema({
     Email  :{type:String,required:true},
     PhoneNumber :{type:Number,required:true},
     Address:{type:String,required:true},
-    Description :{type:String,required:true},
+    Description :{type:String,required:false},
     Meal :{type:String,required:false},
     State :{type:String,default: "Pending" ,required:false},
     createdAt: { type: Date, default: Date.now(), required: false },

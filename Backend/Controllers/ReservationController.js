@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 const { isAuth4Reservation } = require("./Auth");
 
 
-router.get("/All",isAuth4Reservation,(req,res)=>{
+router.get("/All",(req,res)=>{
     ReservationModel.find((err,documents)=>{
         if(!err){
             res.send( documents)
@@ -17,6 +17,17 @@ router.get("/All",isAuth4Reservation,(req,res)=>{
             res.send("Error")
         }
     });
+});
+
+router.get("/MyReservations/:id",async (req,res)=>{
+  ReservationModel.find({ ResevedFor: req.params.id },((err,documents)=>{
+      if(!err){
+          res.send(documents)
+      }
+      else{
+          res.send("Error")
+      }
+  }));
 });
 
 

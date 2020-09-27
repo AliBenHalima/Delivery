@@ -20,6 +20,7 @@ export const Fetch_Comments_Failed = (error) => {
   };
 };
 export const FetchComments = () => {
+  console.log("Commmmmmmment")
   return (dispatch) => {
     // dispatch(Fetch_Comments_Request());
     axios.get("http://localhost:3000/Comment/list").then((response) => {

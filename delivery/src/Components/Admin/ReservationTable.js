@@ -120,7 +120,6 @@ const ReservationTable =(props)=>{
         "authtoken": token
       }}).then((res) => {
       setProductFile(res.data.file);
-      console.log("pppp",res)
   }).catch(error=>{
   console.log(error)
   
@@ -128,6 +127,14 @@ const ReservationTable =(props)=>{
  
 
     })
+    const Description= ()=>{
+      if(props.data.Description){
+        return (<td>{props.data.Description} </td> )
+      }else {
+        return (<td><span> No description available</span> </td> )
+      }
+      return (null)
+    }
     return(
       <Fragment >
          
@@ -137,8 +144,9 @@ const ReservationTable =(props)=>{
         <td>{props.data.Email} </td>
         <td>{props.data.PhoneNumber} </td>
         <td>{props.data.Address} </td>
-        <td>{props.data.Description} </td>
-   
+        {/* <td>{props.data.Description} </td> */}
+          <Description />
+
         <td>{props.data.createdAt} </td>
         <td>{props.data.State} </td>
 

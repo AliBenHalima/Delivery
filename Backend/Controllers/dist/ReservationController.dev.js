@@ -15,12 +15,34 @@ var jwt = require('jsonwebtoken');
 var _require = require("./Auth"),
     isAuth4Reservation = _require.isAuth4Reservation;
 
-router.get("/All", isAuth4Reservation, function (req, res) {
+router.get("/All", function (req, res) {
   ReservationModel.find(function (err, documents) {
     if (!err) {
       res.send(documents);
     } else {
       res.send("Error");
+    }
+  });
+});
+router.get("/MyReservations/:id", function _callee(req, res) {
+  return regeneratorRuntime.async(function _callee$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          ReservationModel.find({
+            ResevedFor: req.params.id
+          }, function (err, documents) {
+            if (!err) {
+              res.send(documents);
+            } else {
+              res.send("Error");
+            }
+          });
+
+        case 1:
+        case "end":
+          return _context.stop();
+      }
     }
   });
 });
@@ -76,10 +98,10 @@ router.post('/AddReservation', function (req, res) {
     }
   });
 });
-router["delete"]('/Delete/:id', isAuth4Reservation, function _callee(req, res) {
-  return regeneratorRuntime.async(function _callee$(_context) {
+router["delete"]('/Delete/:id', isAuth4Reservation, function _callee2(req, res) {
+  return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
-      switch (_context.prev = _context.next) {
+      switch (_context2.prev = _context2.next) {
         case 0:
           ReservationModel.findById(req.params.id).then(function (product) {
             product.remove(function (err) {
@@ -101,7 +123,7 @@ router["delete"]('/Delete/:id', isAuth4Reservation, function _callee(req, res) {
 
         case 1:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
     }
   });

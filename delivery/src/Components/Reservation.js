@@ -4,15 +4,23 @@ import { UserContext } from '../App';
 import axios from "axios";
 import Opt from './Opt';
 import Header from './Header';
-import { FetchProducts, PostProducts } from '../Redux/Products/actions';
+import { FetchProducts, PostProducts, Post_Products_Fail, Post_Products_Success } from '../Redux/Products/actions';
 import { useSelector, useDispatch,shallowEqual, connect } from "react-redux";
 import PlacesAutocomplete, {
 	geocodeByAddress,
 	getLatLng,
   } from 'react-places-autocomplete';
 
+
+  import { useToasts } from 'react-toast-notifications'
+
+
+    
+
+
 function Reservation({productsList,dispatch_Products,isPosted,dispatch_PostProducts}) {
 /////////////////////////////////////////////////////////////////
+const { addToast } = useToasts()
 
 const API_KEY = '152ba6ac3ac5cc41523ada381a15d0ab';
 const API_URL = 'https://api.openweathermap.org/data/2.5/weather';
@@ -86,7 +94,29 @@ const [coordinates, setCoordinates] = React.useState({
   };
 
 	const Sumbithandle = (e) => {
-		dispatch_PostProducts(Data,token);
+		axios.post("http://localhost:3000/Reservation/AddReservation", Data, {
+		headers: {
+		  "authtoken": token
+		},
+	  }).then((res) => {
+		  console.log("Redux  Data is here for post reservation", res);
+
+		  addToast("Resvation has been made", {
+            appearance: 'success',
+            autoDismiss: true,
+          });
+		
+		Post_Products_Success(res.data);
+	  }).catch(error=>{
+		  const errorMsg = error.message;
+		  addToast("Error in reservation", {
+            appearance: 'error',
+            autoDismiss: true,
+          });
+		  Post_Products_Fail (errorMsg);
+	  });
+
+		// dispatch_PostProducts(Data,token);
 		history.push('/Home') 
 	
     e.preventDefault();
@@ -114,6 +144,9 @@ const [coordinates, setCoordinates] = React.useState({
 
 //Fetching all Products 
 useEffect(() => {
+	
+
+
 	console.log("isposted",isPosted)
 
 	if(productsList.length < 1)
@@ -181,7 +214,7 @@ useEffect(() => {
 									</div>
 									<div className="col-md-12">
 										<div className="form-group">
-											<input type="text" id="input_Number" value={state.PhoneNumber} onChange={(e)=>ChangeHandleNumber(e)} placeholder="PhoneNumber" className="time form-control picker__input" required data-error="Please enter PhoneNumber" />
+											<input type="Number" id="input_Number" value={state.PhoneNumber} onChange={(e)=>ChangeHandleNumber(e)} placeholder="PhoneNumber" className="time form-control picker__input" required data-error="Please enter PhoneNumber" />
 											<div className="help-block with-errors"></div>
 										</div>                                 
 									</div>
@@ -238,15 +271,15 @@ useEffect(() => {
 											<div className="help-block with-errors"></div>
 										</div>                                 
 									</div>
-									<div className="col-md-12">
+									{/* <div className="col-md-12">
 									<div class="form-check">
   	  									<input type="checkbox"  onClick={getCurrenWeatherPosition} className="form-check-input pl-5" id="exampleCheck1" />
    											 <label class="form-check-label" for="exampleCheck1">Get my current address...</label>
  									 </div>
-									  </div>
+									  </div> */}
 									<div className="col-md-12">
 										<div className="form-group">
-											<textarea type="text" placeholder="Description" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description" required data-error="Please enter your Description" />
+											<textarea type="text" placeholder="Description" id="Description" value={state.Description} onChange={(e)=>ChangeHandleDescription(e)} className="form-control" name="Description"  data-error="Please enter your Description" />
 											<div className="help-block with-errors"></div>
 										</div> 
 									</div>

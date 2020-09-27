@@ -59,7 +59,7 @@ module.exports.isAuth4Product = (req,res,next)=>
   if(permission.granted)
     {
       next();
-      console.log("yyy");
+      console.log("Authorized");
     }
 
   else
@@ -82,7 +82,7 @@ module.exports.isAuth4Reservation = (req,res,next)=>
   if(permission.granted)
     {
       next();
-      console.log("yyy");
+      console.log("Authorized");
     }
 
   else
@@ -101,7 +101,7 @@ module.exports.isAuth4User = (req,res,next)=>
   if(permission.granted)
     {
       next();
-      console.log("yyy");
+      console.log("Authorized");
     }
 
   else

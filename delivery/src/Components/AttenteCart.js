@@ -47,7 +47,9 @@ if(check) {
         <Fragment >
     <tr>
     <td><img src={props.data.file} className="rounded-top imageClassCart imageClassCart" /></td>
-    <td><strong> {props.data.name}</strong><p>{props.data.category}</p></td>
+    <td><strong> {props.data.name}</strong>
+    {/* <p>{props.data.category}</p> */}
+    </td>
     <td className="widthClass">
     {/* <form className="form-inline"> */}
       <div className="container">

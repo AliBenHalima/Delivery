@@ -89,6 +89,12 @@ return (<Fragment> <Link to="/Cart">	<li className="nav-item">	<span className="
 </Link></Fragment>)
 	}return (null); }
 
+	const MyreservationsCheck =()=>{
+		if(isAuthenticated){
+			return (
+			<Link to="/MyReservations"><li className="nav-item"><a className="nav-link">My Resv</a></li></Link>)
+
+		}return (null); }
 
 // module.exports.PrivateRoute;
 	const LogButton =withRouter(({history})=>{
@@ -157,16 +163,12 @@ return (<Fragment> <Link to="/Cart">	<li className="nav-item">	<span className="
 					<Link to="/Menu">	<li className="nav-item"><a className="nav-link" >Menu</a></li> </Link>
 							<AdminCheck/>	
 						<PrivateRoute path="/About"  component={About} />
+						
+							{/* <a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Pages</a> */}
+							<Link to="/Reservation"><li className="nav-item"><a className="nav-link">Reservation</a></li></Link>
+							<MyreservationsCheck />
 						<li className="nav-item dropdown">
-							<a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Pages</a>
-							<div className="dropdown-menu" aria-labelledby="dropdown-a">
-								<Link to="/Reservation"><a className="dropdown-item">Reservation</a></Link>
-								<a className="dropdown-item" href="stuff.html">Stuff</a>
-								<a className="dropdown-item" href="gallery.html">Gallery</a>
-							</div>
-						</li>
-						<li className="nav-item dropdown">
-							<a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Blog</a>
+							{/* <a className="nav-link dropdown-toggle" href="#" id="dropdown-a" data-toggle="dropdown">Blog</a> */}
 							<div className="dropdown-menu" aria-labelledby="dropdown-a">
 								<a className="dropdown-item" href="blog.html">blog</a>
 								<a className="dropdown-item" href="blog-details.html">blog Single</a>

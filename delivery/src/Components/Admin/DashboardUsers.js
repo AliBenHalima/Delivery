@@ -141,7 +141,7 @@ console.log("Users",response);
             <h1 className="h2">Dashboard</h1>
             <div className="btn-toolbar mb-2 mb-md-0">
               <div className="btn-group mr-2">
-                <button onClick={handleShowAdd} className="btn btn-sm btn-outline-secondary">Add Product</button>
+                {/* <button onClick={handleShowAdd} className="btn btn-sm btn-outline-secondary">Add Product</button> */}
                
               </div>
              

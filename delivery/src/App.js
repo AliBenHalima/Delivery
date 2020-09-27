@@ -33,6 +33,7 @@ import DashboardUsers from './Components/Admin/DashboardUsers';
 
 import { ToastProvider } from 'react-toast-notifications';
 import DashboardReservation from './Components/Admin/DashboardReservation';
+import MyReservations from './Components/MyReservations';
 // import { Snack } from '../snackbar';
 
 
@@ -143,8 +144,10 @@ const token = localStorage.getItem('token');
             isAuthenticated && role=="Admin" ? <DashboardReservation/>: <Redirect to='/Home' />
           )}>
             </Route>
-          
-
+            {/* <Route path="/MyReservations" component={MyReservations} /> */}
+            <Route path="/MyReservations" component={()=>(
+            isAuthenticated ? <MyReservations /> : <Login /> )}>   
+          </Route>
           
           <Route path="/" component={Home} />
           

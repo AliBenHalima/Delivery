@@ -30,7 +30,7 @@ router.post("/SignUp",(req,res,next)=>{
                                 Password:hashedPwd,
                                 Address:req.body.Address,
                                 Phonenumber:req.body.Phonenumber,
-                                role:"Admin",
+                                role:"User",
                               
                             });
                             user

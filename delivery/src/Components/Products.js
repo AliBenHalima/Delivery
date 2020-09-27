@@ -58,7 +58,7 @@ const [categoryName, setcategoryName] = useState("")
   };
 
     const Sumbithandle = (e) => {
-      if(state.Email && state.PhoneNumber && state.Description && state.Address){
+      if(state.Email && state.PhoneNumber &&  state.Address){
       dispatch_PostProducts(Data,token);
     
       history.push('/Menu') 
@@ -341,7 +341,7 @@ useEffect(() => {
       <div class="modal-body">
 
       <div className="form-group">
-			<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" red type="email" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email"  />
+			<input id="input_email" value={state.Email} onChange={(e)=>ChangeHandleEmail(e)} placeholder="Email" red type="email" className="datepicker picker__input form-control" name="Email" type="email"  equired data-error="Please enter Email"  />
       {/* <small id="emailHelp" className="form-text text-muted">
               We'll never share your email with anyone else.
             </small> */}
@@ -439,7 +439,7 @@ size="lg"
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Log in to continue... </Modal.Title>
+          <Modal.Title>Meal Description </Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid"  >
         <div className="container">
@@ -453,9 +453,9 @@ size="lg"
           </div>
           <div className="col-md-8">
          <h1>{props.data.name}</h1>
-       <p>  {categoryName}</p>
-      <p>   {props.data.price}</p>
-        <p> {props.data.CookingTime}</p>
+     <p>  <span class="badge badge-pill badge-primary">Category : </span> {categoryName}</p>
+      <p>   <span class="badge badge-pill badge-primary">Price : </span> {props.data.price} $</p>
+        <p>  <span class="badge badge-pill badge-primary">Cooking time : </span> {props.data.CookingTime}</p>
         
 
           </div>

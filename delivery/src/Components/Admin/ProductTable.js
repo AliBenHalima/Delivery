@@ -156,7 +156,7 @@ const ProductTable =(props)=>{
         <div class="modal-body">
   
         <div className="form-group">
-              <input required id="input_email" value={state.name} onChange={(e)=>ChangeHandleName(e)} placeholder="Name" className="datepicker picker__input form-control" name="Email" type="text"  equired data-error="Please enter Email" />
+              <input required id="input_email" value={state.name} onChange={(e)=>ChangeHandleName(e)}  placeholder="Name" className="datepicker picker__input form-control" name="Email" type="text"  required data-error="Please enter name"  />
                                               
               </div>  
   <div className="form-group">

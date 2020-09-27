@@ -17,7 +17,7 @@ var ReservationSchema = new mongoose.Schema({
   },
   Description: {
     type: String,
-    required: true
+    required: false
   },
   Meal: {
     type: String,

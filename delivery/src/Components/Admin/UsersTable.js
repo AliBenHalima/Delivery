@@ -87,8 +87,8 @@ const UsersTable =(props)=>{
         
       };
     
-    const DeleteProduct=(e,user)=>{
-      let r = window.confirm("Do you want to delete this Product ?");
+    const DeleteUser=(e,user)=>{
+      let r = window.confirm("Do you want to delete this User ?");
       if (r == true) {
       axios.delete("http://localhost:3000/User/Delete/"+user,{
         headers: {
@@ -113,7 +113,7 @@ const UsersTable =(props)=>{
         <td>{props.data.Phonenumber} </td>
         <td>{props.data.role} </td>
         {/* <td>{props.data.Promotion} </td> */}
-        <td><i onClick={(e)=>DeleteProduct(e,props.data._id)} class="fas fa-trash hoverClass"></i></td>
+        <td><i onClick={(e)=>DeleteUser(e,props.data._id)} class="fas fa-trash hoverClass"></i></td>
         
         </tr>
         {/* /************************************ */ }

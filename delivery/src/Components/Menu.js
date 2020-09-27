@@ -11,12 +11,12 @@ import { useToasts } from 'react-toast-notifications'
 function Menu({ productsList, dispatch_Products,dispatchComments }) {
   const { addToast } = useToasts()
   const AuthState= useSelector(state => state.postRed)
-
+  dispatchComments();
   useEffect(() => {
   if(productsList.length < 1)
   dispatch_Products();
   dispatchComments();
-  }, []);
+  });
   
   return (
     
@@ -39,8 +39,7 @@ function Menu({ productsList, dispatch_Products,dispatchComments }) {
               <div className="heading-title text-center">
                 <h2>Special Menu</h2>
                 <p>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting
+                 Check our Special menu
                 </p>
               </div>
             </div>
