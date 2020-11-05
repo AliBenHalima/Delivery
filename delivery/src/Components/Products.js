@@ -307,14 +307,17 @@ useEffect(() => {
                           alt="Image"
                         />
                         <div className="why-text">
-                        <div className="d-flex justify-content-around">
+                        <div className="d-flex justify-content-between">
+                          <div>
                         <h4>{props.data.name}</h4>
+                        </div>
                         <div >
                         <ToggleHeart />
-                        </div>
+                        
                         {/* <i>{props.data.likes }</i>
                         <i class="far fa-heart hoverClass" disabled={!isAuthenticated} onClick={ToggleLike_Dislike}></i> */}
-                        <i class="fas fa-eye hoverClass"  onClick={handleShowDescription} ></i>           
+                        <i className="fas fa-eye hoverClass pl-2"  onClick={handleShowDescription} ></i>   
+                        </div>        
                         </div>
                           <p>{categoryName}</p>
                           <h5> ${props.data.price}</h5>

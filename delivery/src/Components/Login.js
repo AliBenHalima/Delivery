@@ -211,7 +211,7 @@ function Login({dispatch_Users,isAuthenticated,...props}) {
               required
             />
           </div>
-          <div className="form-check">
+          {/* <div className="form-check">
             <input
               type="checkbox"
               class="form-check-input"
@@ -220,7 +220,7 @@ function Login({dispatch_Users,isAuthenticated,...props}) {
             <label className="form-check-label" for="exampleCheck1">
               Check me out
             </label>
-          </div>
+          </div> */}
           <div class="submit-button text-center">
             <button
               id="submit"
